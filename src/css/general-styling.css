@@ -1,0 +1,68 @@
+.importance-badge {
+    border-radius: 2px;
+    padding: .25em .5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+    margin-bottom : 3px
+}
+
+.importance-badge.urgent {
+    background-color: #FFCDD2;
+    color: #C63737;
+}
+
+.importance-badge.important {
+    background-color: #ffd8b2;
+    color: #805b36;
+}
+
+.importance-badge.mineur {
+    background-color: #c8e6c9;
+    color: #256029;
+}
+
+.p-panel-title{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.text-align-center{
+    text-align: center;
+}
+
+.max-min-h-35vh{
+    min-height: 35vh;
+    max-height: 35vh;
+    overflow : scroll;
+}
+
+.max-min-h-90vh{
+    min-height: 77.5vh;
+    max-height: 77.5vh;
+    overflow : scroll;
+}
+
+.p-panel-content.no-padding{
+    padding: 0;
+}
+
+.p-panel-content.no-padding.border-bottom{
+    border-bottom: 1px solid #dee2e6;
+}
+
+.importance-badge.user-type{
+    background-color: lightgray;
+    margin-left: 1em;
+}
+
+a{
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#content{
+    margin: 8px;
+}
