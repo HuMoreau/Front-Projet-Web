@@ -27,7 +27,7 @@
 
 <script>
 export default {
-  name: "VisuelProjet",
+  name: "VisuelDisplayerProjet",
   props: {
     projetToDisplay : Object
   }

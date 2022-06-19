@@ -20,7 +20,7 @@
 
 <script>
 export default {
-  name: "VisuelTicket",
+  name: "VisuelDisplayerTicket",
   props: {
     ticketToDisplay: Object
   }

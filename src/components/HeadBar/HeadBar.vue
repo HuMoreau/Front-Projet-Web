@@ -61,10 +61,12 @@ export default {
                 {
                   label:'Voir',
                   icon:'pi pi-fw pi-eye',
+                  to: '/clients'
                 },
                 {
                   label:'Nouveau',
                   icon:'pi pi-fw pi-plus',
+                  to: '/clients/new'
                 }
               ]
             },
@@ -80,6 +82,7 @@ export default {
                 {
                   label:'Nouveau',
                   icon:'pi pi-fw pi-plus',
+                  to: '/users/new'
                 }
               ]
             }

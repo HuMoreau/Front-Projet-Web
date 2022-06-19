@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import VisuelTicket from "@/components/HomePage/Displayers/Visuels/VisuelTicket";
+import VisuelTicket from "@/components/HomePage/Displayers/Visuels/VisuelDisplayerTicket";
 export default {
   name: "SelectedTicketDisplayer",
   components: {VisuelTicket},

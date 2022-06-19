@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import VisuelProjet from "@/components/HomePage/Displayers/Visuels/VisuelProjet";
+import VisuelProjet from "@/components/HomePage/Displayers/Visuels/VisuelDisplayerProjet";
 export default {
   name: "ProjectsStateDisplayer",
   components: {VisuelProjet},

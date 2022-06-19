@@ -3,7 +3,8 @@
     <div class="p-component p-panel col-12">
       <div class="p-panel-header flex align-items-center">
         <label class="p-panel-title mr-2">Utilisateurs</label>
-        <PrimeButton label="Nouveau" class="p-button-outlined p-button-sm p-button-rounded" icon="pi pi-plus" />
+        <PrimeButton label="Nouveau" class="p-button-outlined p-button-sm p-button-rounded" icon="pi pi-plus"
+        @click="goTo('/users/new')"/>
         <div class="utility-buttons flex align-items-center">
           <SelectButton class="mr-2" v-model="typeToDisplay" :options="typeOptions" dataKey="value">
             <template #option="slotProps">
@@ -14,7 +15,8 @@
         </div>
       </div>
       <div v-if="utilisateurs" class="p-panel-content no-padding max-min-h-90vh">
-        <VisuelUser v-for="utilisateur in this.utilisateursToDisplay" :key="utilisateur.id" :user-to-display="utilisateur"/>
+        <VisuelUser v-for="utilisateur in this.utilisateursToDisplay" :key="utilisateur.id"
+                    :user-to-display="utilisateur" @deleteMe="deleteUser($event)"/>
       </div>
       <div v-else class="p-panel-content no-padding border-bottom">
         <div class="flex flex-column justify-content-center align-items-center p-3">
@@ -23,31 +25,61 @@
         </div>
       </div>
     </div>
+
+    <!--  Modal de suppression  -->
+    <UserDeleteModal @closeMe="closeDeleteModal" :displayed="isDeletionModalDisplayed" :user-to-display="userToDelete"/>
   </div>
 </template>
 
 <script>
 import VisuelUser from "@/components/Users/ListAll/VisuelUser";
+import UserDeleteModal from "@/components/Users/DeleteOne/UserDeleteModal";
 export default {
   name: "UsersList",
-  components: {VisuelUser},
+  components: {UserDeleteModal, VisuelUser},
   data() {
     return {
       typeToDisplay : {icon: 'pi pi-users', value: 'EVERYBODY'},
       recherche : null,
+      isDeletionModalDisplayed : false,
+      userToDelete : null,
       utilisateurs : [
-        {id: 1, type:'DEV', name:'Louison Armand', profilPicture: null, noisettes: 1254},
-        {id: 2, type:'DEV', name:'Flavien Perrineau', profilPicture: null, noisettes: 1254},
-        {id: 3, type:'RAP', name:'Théophane Lumineau', profilPicture: null, noisettes: null},
-        {id: 4, type:'DEV', name:'Guillaume Conchon', profilPicture: null, noisettes: 1254},
-        {id: 5, type:'RAP', name:'Bertrand Stailquy', profilPicture: null, noisettes: null},
-        {id: 6, type:'DEV', name:'Michael Delaporte', profilPicture: null, noisettes: 1254},
+        {id: 1, type:'DEV', prenom:'Louison', nom:'Armand', profilPicture: null, noisettes: 1254, email: 'mail@mail.com'},
+        {id: 2, type:'DEV', prenom:'Flavien', nom:'Perrineau', profilPicture: null, noisettes: 1254, email: 'mail@mail.com'},
+        {id: 3, type:'RAP', prenom:'Théophane', nom:'Lumineau', profilPicture: null, noisettes: null, email: 'mail@mail.com'},
+        {id: 4, type:'DEV', prenom:'Guillaume', nom:'Conchon', profilPicture: null, noisettes: 1254, email: 'mail@mail.com'},
+        {id: 5, type:'RAP', prenom:'Bertrand', nom:'Stailquy', profilPicture: null, noisettes: null, email: 'mail@mail.com'},
+        {id: 6, type:'DEV', prenom:'Michael', nom:'Delaporte', profilPicture: null, noisettes: 1254, email: 'mail@mail.com'},
       ],
       typeOptions: [
         {icon: 'pi pi-users', value: 'EVERYBODY'},
         {icon: 'pi pi-desktop', value: 'DEV'},
         {icon: 'pi pi-phone', value: 'RAP'}
       ]
+    }
+  },
+  methods: {
+    deleteUser(event){
+      this.userToDelete = event;
+      this.isDeletionModalDisplayed = true;
+    },
+    closeDeleteModal(){
+      this.userToDelete = null;
+      this.isDeletionModalDisplayed = false;
+    },
+    goTo(link, params){
+      let result = "http://localhost:8080" + link;
+      if(params){
+        result += "?";
+        Object.entries(params).forEach(param => {
+          result += param[0];
+          result += "=";
+          result += param[1];
+          result += "&"
+        });
+        result.slice(0, -1);
+      }
+      window.location.href = result;
     }
   },
   computed: {
@@ -58,7 +90,8 @@ export default {
       }
       if(this.recherche){
          result = result.filter(user =>
-             user.name.toLowerCase().includes(this.recherche.toLowerCase()))
+             user.prenom.toLowerCase().includes(this.recherche.toLowerCase())
+             || user.nom.toLowerCase().includes(this.recherche.toLowerCase()))
       }
       return result;
     },
