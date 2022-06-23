@@ -3,6 +3,7 @@ import App from './App.vue'
 import VueRouter from 'vue-router';
 import routes from './router'
 import { createPinia, PiniaVuePlugin } from 'pinia';
+import axios from 'axios';
 import PrimeVue from 'primevue/config'
 import Menubar from "primevue/menubar";
 import Avatar from "primevue/avatar";
@@ -45,8 +46,17 @@ const router = new VueRouter({
 
 const pinia = createPinia()
 
+export const apiService = axios.create({
+  baseURL: 'localhost:9090/api/',
+  timeout: 5000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+
 new Vue({
   router : router,
   pinia,
   render: h => h(App),
 }).$mount('#app')
+
