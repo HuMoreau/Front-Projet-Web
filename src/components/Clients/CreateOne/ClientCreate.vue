@@ -74,6 +74,13 @@ export default {
   setup () {
     return { v$: useVuelidate() }
   },
+  mounted() {
+    apiService.get('utils/enterprises').then(response => {
+      this.entreprises = response.data;
+    }).catch(error => {
+      console.log(error);
+    });
+  },
   created() {
     if(this.$route.query.mod){
       console.log(this.$route.query.mod)
@@ -83,13 +90,7 @@ export default {
   data(){
     return {
       submitted : false,
-      entreprises : [
-        "Google",
-        "Apple",
-        "Facebook",
-        "Amazon",
-        "Microsoft"
-      ],
+      entreprises : [],
       client : {
         prenom : null,
         nom : null,

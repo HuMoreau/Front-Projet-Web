@@ -6,7 +6,7 @@
         <PrimeButton label="Nouveau" class="p-button-outlined p-button-sm p-button-rounded" icon="pi pi-plus"
                      @click="goTo('/clients/new')"/>
         <div class="utility-buttons flex align-items-center">
-          <DropDown v-model="entrepriseToShow" :options="listOfEntreprise" :filter="true" placeholder="Entreprise"
+          <DropDown v-model="entrepriseToShow" :options="this.entreprises" :filter="true" placeholder="Entreprise"
                     :showClear="true" class="mr-2"/>
           <InputText placeholder="Rechercher" type="text" class="ml-auto" v-model="recherche" :disabled="!clients"/>
         </div>
@@ -45,7 +45,8 @@ export default {
       entrepriseToShow : null,
       isDeletionModalDisplayed : false,
       clientToDelete : null,
-      clients : []
+      clients : [],
+      entreprises : []
     }
   },
   methods: {
@@ -53,6 +54,13 @@ export default {
       // call api to get all clients
       apiService.get("/client").then(response => {
         this.clients = response.data;
+      });
+
+      // call api to get all entreprises
+      apiService.get('utils/enterprises').then(response => {
+        this.entreprises = response.data;
+      }).catch(error => {
+        console.log(error);
       });
     },
     deleteClient(event){
@@ -94,11 +102,6 @@ export default {
         );
       }
       return result;
-    },
-    listOfEntreprise : function (){
-      return this.clients.map(client => client.entreprise)
-          .sort()
-          .filter((entreprise, pos, ary) => !pos || entreprise !== ary[pos -1]);
     }
   }
 }
