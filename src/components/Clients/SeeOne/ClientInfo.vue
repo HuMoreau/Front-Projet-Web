@@ -72,14 +72,27 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import {required, email, alpha, helpers} from '@vuelidate/validators'
+import {apiService} from "@/main";
 export default {
   name: "ClientInfo",
   setup () {
     return { v$: useVuelidate() }
   },
+  mounted() {
+    apiService.get('client/' + this.$route.params.id).then(response => {
+      this.client = response.data;
+    }).catch(error => {
+      console.log(error);
+    });
+
+    apiService.get('utils/enterprises').then(response => {
+      this.entreprises = response.data;
+    }).catch(error => {
+      console.log(error);
+    });
+  },
   created() {
     if(this.$route.query.mod){
-      console.log(this.$route.query.mod)
       this.modification = (this.$route.query.mod === 'true');
     }
   },
@@ -87,19 +100,14 @@ export default {
     return {
       modification : false,
       submitted : false,
-      entreprises : [
-          "Google",
-          "Apple",
-          "Facebook",
-          "Amazon",
-          "Microsoft"
-      ],
+      entreprises : [],
       client : {
-        id: 1,
-        prenom : "Ousseynou",
-        nom : "Sakho",
-        entreprise : "Boite de conseil",
-        email : 'email@email.com'
+        id : null,
+        nom : "",
+        prenom : "",
+        email : "",
+        profilPicture : "",
+        entreprise : ""
       },
       filteredEntreprises : null,
     }
@@ -109,6 +117,15 @@ export default {
       this.submitted = invalid;
       if(!invalid){
         this.v$.$reset();
+
+        // api call to create client
+        // if success, redirect to client list
+        // if error, display error message
+        apiService.put('/client', this.client).then(() => {
+          this.$router.push('/clients');
+        }).catch(error => {
+          console.log(error);
+        });
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){
