@@ -15,7 +15,7 @@
         </div>
       </div>
       <div v-if="utilisateurs" class="p-panel-content no-padding max-min-h-90vh">
-        <VisuelUser v-for="utilisateur in this.utilisateursToDisplay" :key="utilisateur.id"
+        <VisuelUser v-for="utilisateur in this.utilisateursToDisplay" :key="utilisateur.id + '-' + utilisateur.type"
                     :user-to-display="utilisateur" @deleteMe="deleteUser($event)"/>
       </div>
       <div v-else class="p-panel-content no-padding border-bottom">
@@ -34,6 +34,7 @@
 <script>
 import VisuelUser from "@/components/Users/ListAll/VisuelUser";
 import UserDeleteModal from "@/components/Users/DeleteOne/UserDeleteModal";
+import {apiService} from "@/main";
 export default {
   name: "UsersList",
   components: {UserDeleteModal, VisuelUser},
@@ -43,14 +44,7 @@ export default {
       recherche : null,
       isDeletionModalDisplayed : false,
       userToDelete : null,
-      utilisateurs : [
-        {id: 1, type:'DEV', prenom:'Louison', nom:'Armand', profilPicture: null, noisettes: 1254, email: 'mail@mail.com'},
-        {id: 2, type:'DEV', prenom:'Flavien', nom:'Perrineau', profilPicture: null, noisettes: 1254, email: 'mail@mail.com'},
-        {id: 3, type:'RAP', prenom:'Théophane', nom:'Lumineau', profilPicture: null, noisettes: null, email: 'mail@mail.com'},
-        {id: 4, type:'DEV', prenom:'Guillaume', nom:'Conchon', profilPicture: null, noisettes: 1254, email: 'mail@mail.com'},
-        {id: 5, type:'RAP', prenom:'Bertrand', nom:'Stailquy', profilPicture: null, noisettes: null, email: 'mail@mail.com'},
-        {id: 6, type:'DEV', prenom:'Michael', nom:'Delaporte', profilPicture: null, noisettes: 1254, email: 'mail@mail.com'},
-      ],
+      utilisateurs : [],
       typeOptions: [
         {icon: 'pi pi-users', value: 'EVERYBODY'},
         {icon: 'pi pi-desktop', value: 'DEV'},
@@ -58,7 +52,18 @@ export default {
       ]
     }
   },
+  mounted() {
+    // api call to get all users
+    this.populate();
+  },
   methods: {
+    populate() {
+      apiService.get('utils/users').then(response => {
+        this.utilisateurs = response.data;
+      }).catch(error => {
+        console.log(error);
+      });
+    },
     deleteUser(event){
       this.userToDelete = event;
       this.isDeletionModalDisplayed = true;
