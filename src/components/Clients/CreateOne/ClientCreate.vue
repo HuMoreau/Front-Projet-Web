@@ -68,6 +68,7 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import {required, email, alpha, helpers} from '@vuelidate/validators'
+import {apiService} from "@/main";
 export default {
   name: "ClientCreate",
   setup () {
@@ -101,8 +102,18 @@ export default {
   methods: {
     submitCreation(invalid){
       this.submitted = invalid;
+
       if(!invalid){
         this.v$.$reset();
+
+        // api call to create client
+        // if success, redirect to client list
+        // if error, display error message
+        apiService.post('/client', this.client).then(() => {
+          this.$router.push('/clients');
+        }).catch(error => {
+          console.log(error);
+        });
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){

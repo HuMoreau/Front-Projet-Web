@@ -47,7 +47,7 @@ const router = new VueRouter({
 const pinia = createPinia()
 
 export const apiService = axios.create({
-  baseURL: 'localhost:9090/api/',
+  baseURL: 'http://localhost:9090/api/',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json'
