@@ -14,6 +14,7 @@ import SelectButton from "primevue/selectbutton";
 import InputSwitch from "primevue/inputswitch";
 import Dialog from "primevue/dialog";
 import AutoComplete from "primevue/autocomplete";
+import Panel from "primevue/panel";
 
 import 'primevue/resources/themes/lara-light-blue/theme.css'     //theme
 import './css/general-styling.css'                       //personal theme
@@ -35,6 +36,7 @@ Vue.component('SelectButton', SelectButton);
 Vue.component('InputSwitch', InputSwitch);
 Vue.component('PrimeDialog', Dialog);
 Vue.component('AutoComplete', AutoComplete);
+Vue.component('PrimePanel', Panel);
 
 const router = new VueRouter({
   routes,

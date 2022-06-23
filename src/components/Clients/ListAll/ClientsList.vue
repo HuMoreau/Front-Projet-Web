@@ -34,6 +34,9 @@ import ClientDeleteModal from "@/components/Clients/DeleteOne/ClientDeleteModal"
 export default {
   name: "ClientsList",
   components: {ClientDeleteModal, VisuelClient},
+  setup(){
+
+  },
   data() {
     return {
       recherche : null,

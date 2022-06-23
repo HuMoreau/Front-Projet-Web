@@ -47,10 +47,12 @@ export default {
                 {
                   label:'Voir',
                   icon:'pi pi-fw pi-eye',
+                  to: '/projets'
                 },
                 {
                   label:'Nouveau',
                   icon:'pi pi-fw pi-plus',
+                  to: '/projets/new'
                 }
               ]
             },

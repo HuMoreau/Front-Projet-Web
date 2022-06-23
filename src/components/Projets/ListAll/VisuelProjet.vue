@@ -20,7 +20,8 @@ export default {
   name: "VisuelProjet",
   props : {
     projetToDisplay : Object,
-  },data() {
+  },
+  data() {
     return {
       chartData: {
         labels: ['Urgents','Importants','Mineurs'],
@@ -44,7 +45,7 @@ export default {
             enabled : false,
           }
         }
-      }
+      },
     }
   },
   methods: {

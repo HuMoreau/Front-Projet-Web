@@ -5,6 +5,10 @@
                    @click="goTo('/projets')"/>
       <label class="p-panel-title mr-2">Infos - {{projet.nom}} - {{$route.params.id}}</label>
       <div class="inline-flex align-items-center ml-auto">
+        <div class="flex align-self-center justify-content-center">
+          <PrimeButton label="Ajouter un ticket" class="p-button-outlined p-button p-button-rounded mr-3" icon="pi pi-ticket"
+                       @click="goTo('/')"/>
+        </div>
         <div class="flex flex-column align-items-center mr-2">
           <label>{{modification ? 'Modifiable' : 'Modifier'}}</label>
           <InputSwitch v-model="modification"/>
@@ -16,16 +20,27 @@
     <div class="grid grid-nogutter p-panel-content">
       <div class=" col-10 col-offset-1 grid">
         <div class="col-4 grid">
-          <div class="col-12  flex flex-column">
-            <label>Nom</label>
-            <InputText v-model="v$.projet.nom.$model" :disabled="!modification"
-                       :class="{'p-invalid': v$.projet.nom.$invalid && submitted}"></InputText>
-            <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('nom', v$.$errors)" :key="error.$uid"
-                   class="p-error">{{error.$message}}</small>
+          <div class="col-12 flex flex-column justify-content-center">
+            <div class="col-12 flex flex-column">
+              <label class="mb-2">Nom</label>
+              <InputText v-model="v$.projet.nom.$model" :disabled="!modification"
+                         :class="{'p-invalid': v$.projet.nom.$invalid && submitted}"></InputText>
+              <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('nom', v$.$errors)" :key="error.$uid"
+                     class="p-error">{{error.$message}}</small>
+            </div>
           </div>
         </div>
-        <div class="col-8 grid">
-          <PrimeChart type="bar" :data="basicData"/>
+        <div class="col-8 flex justify-content-evenly align-items-center">
+          <div>
+            <PrimePanel header="Distribution des tickets en cours">
+              <PrimeChart ref="graphique" type="bar" :data="basicData" :options="chartOptions"/>
+            </PrimePanel>
+          </div>
+          <div>
+            <PrimePanel header="Evolution du nombre de tickets">
+              <PrimeChart type="line" :data="lineBasicData" :options="chartOptions"/>
+            </PrimePanel>
+          </div>
         </div>
       </div>
     </div>
@@ -35,10 +50,13 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import {required, helpers} from '@vuelidate/validators'
+
 export default {
   name: "ProjetInfo",
   setup () {
-    return { v$: useVuelidate() }
+    return {
+      v$: useVuelidate(),
+    }
   },
   created() {
     if(this.$route.query.mod){
@@ -46,33 +64,36 @@ export default {
       this.modification = (this.$route.query.mod === 'true');
     }
   },
+  mounted() {
+  },
   data(){
     return {
       projet : {
         id: 1,
-        nom : "LE PROJET KE JEM",
+        nom : "Nom du projet",
         nombreTicketsUrgents : 5,
         nombreTicketsImportants : 3,
         nombreTicketsMineurs : 12
       },
+      chartOptions: {
+        plugins : {
+          legend: {
+            display: false,
+          },
+        }
+      },
       modification : false,
       submitted : false,
-      basicData: {
-        labels: ["Urgents", "Importants", "Mineurs"],
+      lineBasicData: {
+        labels: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet'],
         datasets: [
           {
-            label: 'Tickets',
-            backgroundColor: [
-              '#FFCDD2',
-              '#ffd8b2',
-              '#c8e6c9'
-            ],
-            data: [
-              // this.projet.nombreTicketsUrgents,
-              // this.projet.nombreTicketsImportants,
-              // this.projet.nombreTicketsMineurs
-                5,3,12
-            ],
+            label: 'Nombre de tickets',
+            data: [14, 23, 29, 26, 12, 9, 20],
+            fill: true,
+            borderColor: '#42A5F5',
+            tension: .4,
+            backgroundColor : 'rgba(66,165,245,0.2)'
           }
         ]
       },
@@ -80,6 +101,7 @@ export default {
   },
   methods: {
     submitModification(invalid){
+      this.$refs.graphique.chart.update();
       this.submitted = invalid;
       if(!invalid){
         this.v$.$reset();
@@ -105,6 +127,31 @@ export default {
       }
       window.location.href = result;
     },
+  },
+  computed : {
+    chartData: function (){
+      return [
+        this.projet.nombreTicketsUrgents,
+        this.projet.nombreTicketsImportants,
+        this.projet.nombreTicketsMineurs
+      ]
+    },
+    basicData : function (){
+      return {
+        labels: ["Urgents", "Importants", "Mineurs"],
+        datasets: [
+          {
+            label: 'Tickets',
+            backgroundColor: [
+              '#FFCDD2',
+              '#ffd8b2',
+              '#c8e6c9'
+            ],
+            data: this.chartData,
+          }
+        ]
+      };
+    }
   },
   validations () {
     return {

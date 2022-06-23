@@ -24,14 +24,14 @@ export default {
   components: {VisuelTicket},
   data(){
     return {
-      // tickets : [
-      //   {id: 1, titre : "Ticket 6", description : "Description du ticket 1", date : "01/01/2022", projet : "Projet 1", priorite : "urgent"},
-      //   {id: 2, titre : "Ticket 8", description : "Description du ticket 2", date : "05/02/2022", projet : "Projet 2", priorite : "mineur"},
-      //   {id: 3, titre : "Ticket 9", description : "Description du ticket 3", date : "10/03/2022", projet : "Projet 3", priorite : "important"},
-      //   {id: 4, titre : "Ticket 13", description : "Description du ticket 4", date : "15/04/2022", projet : "Projet 4", priorite : "urgent"},
-      //   {id: 5, titre : "Ticket 23", description : "Description du ticket 5", date : "20/05/2022", projet : "Projet 5", priorite : "mineur"}
-      // ],
-      tickets : null,
+      tickets : [
+        {id: 1, titre : "Ticket 6", description : "Description du ticket 1", date : "01/01/2022", projet : "Projet 1", priorite : "urgent"},
+        {id: 2, titre : "Ticket 8", description : "Description du ticket 2", date : "05/02/2022", projet : "Projet 2", priorite : "mineur"},
+        {id: 3, titre : "Ticket 9", description : "Description du ticket 3", date : "10/03/2022", projet : "Projet 3", priorite : "important"},
+        {id: 4, titre : "Ticket 13", description : "Description du ticket 4", date : "15/04/2022", projet : "Projet 4", priorite : "urgent"},
+        {id: 5, titre : "Ticket 23", description : "Description du ticket 5", date : "20/05/2022", projet : "Projet 5", priorite : "mineur"}
+      ],
+      // tickets : null,
       selectedSorting : null,
       sortingList : [
         {name : "Priorité"},
