@@ -6,7 +6,7 @@
         <PrimeButton label="Nouveau" class="p-button-outlined p-button-sm p-button-rounded" icon="pi pi-plus"
                      @click="goTo('/clients/new')"/>
         <div class="utility-buttons flex align-items-center">
-          <DropDown v-model="entrepriseToShow" :options="listOfEntreprise" :filter="true" placeholder="Entreprise"
+          <DropDown v-model="entrepriseToShow" :options="this.entreprises" :filter="true" placeholder="Entreprise"
                     :showClear="true" class="mr-2"/>
           <InputText placeholder="Rechercher" type="text" class="ml-auto" v-model="recherche" :disabled="!clients"/>
         </div>
@@ -24,18 +24,20 @@
     </div>
 
     <!--  Modal de suppression  -->
-    <ClientDeleteModal @closeMe="closeDeleteModal" :displayed="isDeletionModalDisplayed" :client-to-display="clientToDelete"/>
+    <ClientDeleteModal @closeMe="closeDeleteModal($event)" :displayed="isDeletionModalDisplayed" :client-to-display="clientToDelete"/>
   </div>
 </template>
 
 <script>
 import VisuelClient from "@/components/Clients/ListAll/VisuelClient";
 import ClientDeleteModal from "@/components/Clients/DeleteOne/ClientDeleteModal";
+import {apiService} from "@/main";
+
 export default {
   name: "ClientsList",
   components: {ClientDeleteModal, VisuelClient},
-  setup(){
-
+  mounted() {
+    this.populate();
   },
   data() {
     return {
@@ -43,23 +45,32 @@ export default {
       entrepriseToShow : null,
       isDeletionModalDisplayed : false,
       clientToDelete : null,
-      clients : [
-        {id: 1, nom:'Tan', prenom:'Lucie', entreprise: 'BNP Paribas', email: 'lucie.tan@client.com'},
-        {id: 2, nom:'Marande', prenom:'Paul', entreprise: 'Air Liquide', email: 'paul.marande@client.com'},
-        {id: 3, nom:'Le Goff', prenom:'Pierre', entreprise: 'Armée de terre', email: 'pierre.legoff@client.com'},
-        {id: 4, nom:'Avite', prenom:'Aurélien', entreprise: 'Safran', email: 'aurelien.avite@client.com'},
-        {id: 5, nom:'Barre', prenom:'Nathan', entreprise: 'Ubisoft', email: 'nathan.barre@client.com'},
-        {id: 6, nom:'Armand', prenom:'Virgile', entreprise: 'Foncaris', email: 'virgile.armand@client.com'},
-        {id: 7, nom:'N Guyen', prenom:'Corentin', entreprise: 'Ubisoft', email: 'corentin.nguyen@client.com'},
-      ]
+      clients : [],
+      entreprises : []
     }
   },
   methods: {
+    populate() {
+      // call api to get all clients
+      apiService.get("/client").then(response => {
+        this.clients = response.data;
+      });
+
+      // call api to get all entreprises
+      apiService.get('utils/enterprises').then(response => {
+        this.entreprises = response.data;
+      }).catch(error => {
+        console.log(error);
+      });
+    },
     deleteClient(event){
       this.clientToDelete = event;
       this.isDeletionModalDisplayed = true;
     },
-    closeDeleteModal(){
+    closeDeleteModal(isDeleted){
+      if (isDeleted) {
+        this.populate();
+      }
       this.clientToDelete = null;
       this.isDeletionModalDisplayed = false;
     },
@@ -91,11 +102,6 @@ export default {
         );
       }
       return result;
-    },
-    listOfEntreprise : function (){
-      return this.clients.map(client => client.entreprise)
-          .sort()
-          .filter((entreprise, pos, ary) => !pos || entreprise !== ary[pos -1]);
     }
   }
 }
