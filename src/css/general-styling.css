@@ -76,3 +76,7 @@ a{
     border-bottom: 1px solid #dee2e6;
     padding: 10px
 }
+
+.utility-buttons{
+    margin-left: auto;
+}

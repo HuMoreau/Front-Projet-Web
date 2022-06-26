@@ -16,6 +16,8 @@ import InputSwitch from "primevue/inputswitch";
 import Dialog from "primevue/dialog";
 import AutoComplete from "primevue/autocomplete";
 import Panel from "primevue/panel";
+import Accordion from 'primevue/accordion';
+import AccordionTab from 'primevue/accordiontab';
 
 import 'primevue/resources/themes/lara-light-blue/theme.css'     //theme
 import './css/general-styling.css'                       //personal theme
@@ -38,6 +40,8 @@ Vue.component('InputSwitch', InputSwitch);
 Vue.component('PrimeDialog', Dialog);
 Vue.component('AutoComplete', AutoComplete);
 Vue.component('PrimePanel', Panel);
+Vue.component('PrimeAccordion', Accordion);
+Vue.component('AccordionTab', AccordionTab);
 
 const router = new VueRouter({
   routes,
