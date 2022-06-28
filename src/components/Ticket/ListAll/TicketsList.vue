@@ -123,8 +123,8 @@
                      @click="resetFilters()"/>
       </div>
       <div v-if="tickets && ticketsToDisplay" class="p-panel-content no-padding max-min-h-90vh">
-<!--        <VisuelUser v-for="utilisateur in this.utilisateursToDisplay" :key="utilisateur.id"-->
-<!--                    :user-to-display="utilisateur" @deleteMe="deleteUser($event)"/>-->
+        <VisuelTicket v-for="ticket in this.ticketsToDisplay" :key="ticket.id" :display-description="true"
+                    :ticket-to-display="ticket" @deleteMe="deleteTicket($event)"/>
       </div>
       <div v-else-if="tickets" class="p-panel-content no-padding border-bottom">
         <div class="flex flex-column justify-content-center align-items-center p-3">
@@ -143,8 +143,10 @@
 
 <script>
 
+import VisuelTicket from "@/components/Ticket/ListAll/VisuelTicket";
 export default {
   name: "TicketsList",
+  components: {VisuelTicket},
   data() {
     return {
       filterDisplayed : false,
@@ -290,12 +292,12 @@ export default {
     }
   },
   methods: {
-    deleteUser(event){
-      this.userToDelete = event;
+    deleteTicket(event){
+      this.ticketToDelete = event;
       this.isDeletionModalDisplayed = true;
     },
     closeDeleteModal(){
-      this.userToDelete = null;
+      this.ticketToDelete = null;
       this.isDeletionModalDisplayed = false;
     },
     goTo(link, params){
