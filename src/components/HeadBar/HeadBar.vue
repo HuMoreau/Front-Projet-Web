@@ -29,6 +29,7 @@ export default {
             {
               label:'Voir',
               icon:'pi pi-fw pi-eye',
+              to: '/tickets'
             },
             {
               label:'Nouveau',
