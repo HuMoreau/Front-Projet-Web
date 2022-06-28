@@ -1,14 +1,32 @@
 <template>
   <div class="line-in-list flex-column">
     <div class="flex align-items-center">
-      <label class="mr-3"><strong>{{this.ticketToDisplay.nom}}</strong></label>
-      <span class="importance-badge">{{this.ticketToDisplay.etatAvancement}}</span>
-      <span class="importance-badge">{{this.ticketToDisplay.importance}}</span>
-      <label class="ml-2 mr-3">RAP : {{this.ticketToDisplay.idRapporteur ? this.ticketToDisplay.idRapporteur : '-'}} </label>
-      <label class="mr-3">DEV : {{this.ticketToDisplay.idDev ? this.ticketToDisplay.idDev : '-'}} </label>
-      <label class="mr-3">CLIENT : {{this.ticketToDisplay.idClient ? this.ticketToDisplay.idClient : '-'}} </label>
-      <label class="mr-3">PROJET : {{this.ticketToDisplay.idProjet}} </label>
-      <label class="mr-3">CREATION : {{this.ticketToDisplay.dateStart}} </label>
+      <label class="p-panel-title mr-3"><strong>{{this.ticketToDisplay.nom}}</strong></label>
+      <span :class="'importance-badge ' + this.ticketToDisplay.etatAvancement + ' mr-2'">{{this.avancement}}</span>
+      <span :class="'importance-badge ' + this.priorite.toLowerCase() + ' mr-2'">{{this.priorite}}</span>
+      <div class="flex flex-column align-items-center ml-2 mr-3">
+        <label><strong>Rapporteur</strong></label>
+        <label>{{this.ticketToDisplay.rapporteur.nom
+            ? this.ticketToDisplay.rapporteur.prenom + ' ' + this.ticketToDisplay.rapporteur.nom : '-'}}</label>
+      </div>
+      <div class="flex flex-column align-items-center mr-3">
+        <label><strong>Developpeur</strong></label>
+        <label>{{this.ticketToDisplay.developpeur.nom
+            ? this.ticketToDisplay.developpeur.prenom + ' ' + this.ticketToDisplay.developpeur.nom : '-'}}</label>
+      </div>
+      <div class="flex flex-column align-items-center mr-3">
+        <label><strong>Client</strong></label>
+        <label>{{this.ticketToDisplay.client.nom
+              ? this.ticketToDisplay.client.prenom + ' ' + this.ticketToDisplay.client.nom : '-'}}</label>
+      </div>
+      <div class="flex flex-column align-items-center mr-3">
+        <label><strong>Projet</strong></label>
+        <label>{{this.ticketToDisplay.projet.nom}}</label>
+      </div>
+      <div class="flex flex-column align-items-center mr-3">
+        <label><strong>Date création</strong></label>
+        <label>{{this.ticketToDisplay.dateStart}}</label>
+      </div>
       <div id="go_to_buttons">
         <PrimeButton icon="pi pi-pencil" class="p-button-rounded p-button-secondary p-button-sm p-button-text"
                      @click="goTo(`/tickets/${ticketToDisplay.id}`, {mod : true})"/>
@@ -47,10 +65,35 @@ export default {
       window.location.href = result;
     },
     deleteMe(){
-      this.$emit('deleteMe', this.userToDisplay);
+      this.$emit('deleteMe', this.ticketToDisplay);
     }
   },
-  computed: {}
+  computed: {
+    avancement : function (){
+      if(this.ticketToDisplay.etatAvancement === "EN_COURS"){
+        return 'En cours';
+      }
+      if(this.ticketToDisplay.etatAvancement === "A_FAIRE"){
+        return 'A faire';
+      }
+      if(this.ticketToDisplay.etatAvancement === "FINI"){
+        return 'Fini';
+      }
+      return '-';
+    },
+    priorite : function (){
+      if(this.ticketToDisplay.importance === "LOW"){
+        return 'Mineur';
+      }
+      if(this.ticketToDisplay.importance === "MEDIUM"){
+        return 'Important';
+      }
+      if(this.ticketToDisplay.importance === "HIGH"){
+        return 'Urgent';
+      }
+      return '-';
+    },
+  }
 }
 </script>
 
