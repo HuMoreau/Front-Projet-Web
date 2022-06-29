@@ -6,6 +6,11 @@
         <PrimeButton label="Nouveau" class="p-button-outlined p-button-sm p-button-rounded" icon="pi pi-plus"
                      @click="goTo('/tickets/new')"/>
         <div class="utility-buttons flex align-items-center">
+          <SelectButton class="mr-2" v-model="descriptionDisplayed" :options="displayDescriptionOptions" dataKey="value">
+            <template #option="slotProps">
+              <i :class="slotProps.option.icon"></i>
+            </template>
+          </SelectButton>
           <DropDown class="mr-2" placeholder="Trier par" v-model="sortingOption" :options="sortingOptions"
                     optionLabel="value" :showClear="true">
             <template #value="slotProps">
@@ -118,13 +123,14 @@
         <DropDown class="mr-2" placeholder="Projet" v-model="selectedFilters.projet"
                   :options="projetsList" optionLabel="nom" :filter="true" :showClear="true">
         </DropDown>
-        <PrimeButton icon="pi pi-times" iconPos="right" :disabled="isThereAFilterSelected"
+        <PrimeButton icon="pi pi-times" iconPos="right" :disabled="!isThereAFilterSelected"
                      class="p-button-rounded p-button-danger p-button-text mr-2"
                      @click="resetFilters()"/>
       </div>
       <div v-if="tickets && ticketsToDisplay" class="p-panel-content no-padding max-min-h-90vh">
-        <VisuelTicket v-for="ticket in this.ticketsToDisplay" :key="ticket.id" :display-description="true"
-                    :ticket-to-display="ticket" @deleteMe="deleteTicket($event)"/>
+        <VisuelTicket v-for="ticket in this.ticketsToDisplay" :key="ticket.id"
+                      :display-description="isDescriptionDisplayed"
+                      :ticket-to-display="ticket" @deleteMe="deleteTicket($event)"/>
       </div>
       <div v-else-if="tickets" class="p-panel-content no-padding border-bottom">
         <div class="flex flex-column justify-content-center align-items-center p-3">
@@ -154,6 +160,7 @@ export default {
       isDeletionModalDisplayed : false,
       ticketToDelete : null,
       sortingOption : null,
+      descriptionDisplayed : {icon : 'pi pi-minus', value : false},
       sortingOptions : [
         {value : "dateDeCreationCroissante", name : "Date de création", icon : "pi pi-sort-numeric-down"},
         {value : "dateDeCreationDecroissante", name : "Date de création", icon : "pi pi-sort-numeric-up"},
@@ -200,21 +207,25 @@ export default {
         {id : 3, nom : 'Projet 3'},
         {id : 4, nom : 'Projet 4'},
       ],
+      displayDescriptionOptions : [
+        {icon : 'pi pi-minus-circle', value : false},
+        {icon : 'pi pi-info-circle', value : true}
+      ],
       tickets : [
         {
           id: 1,
           developpeur: {
-            nom: "Loppeur",
-            prenom: "Dev",
+            nom: "Armand",
+            prenom: "Louison",
             id: 1
           },
           rapporteur: {
-            nom: "Porteur",
-            prenom: "Rap",
+            nom: "Conchon",
+            prenom: "Guillaume",
             id: 1
           },
           nom:'Ça marche po',
-          dateStart:'17/05/2022',
+          dateStart:'05-16-2022',
           etatAvancement: 'EN_COURS',
           importance: 'HIGH',
           description : "C'est un désastre le projet ne fonctionne plus, et l'unique disque dur sur lequel était le code est tombé dans la mare aux canards. Les serveurs ont cramés parce que Pierrot à oublié des tranches de salami dans la ventilation. La deadline est pour ce soir et le stagiaire est parti hier (comme ma femme). Il faut que je me dépêche d'apprendre le C++ sur Open Classroom ! :)",
@@ -223,8 +234,8 @@ export default {
             id: 1
           },
           client: {
-            nom: "Ent",
-            prenom: "Cli",
+            nom: "Lumineau",
+            prenom: "Théophane",
             id: 1
           },
           dateAssign : null,
@@ -243,7 +254,7 @@ export default {
             id: 2
           },
           nom:'Fote dortograffe',
-          dateStart:'17/05/2022',
+          dateStart:'05-18-2022',
           etatAvancement: 'A_FAIRE',
           importance: 'LOW',
           description : "Le clian ce plaint des fotes dans les label de lapli, srx fête atenssion les ga aprai je me fé grondé par les clian et parfoi jy pance dans mon lis la nui avec come quan Margo elle voulé pa aitre mon namoureuze en sinquiaime et je pleur après :'(",
@@ -256,7 +267,7 @@ export default {
             prenom: "Cli",
             id: 2
           },
-          dateAssign : '17/05/2022',
+          dateAssign : '17-05-2022',
           dateEnd : null,
         },
         {
@@ -271,8 +282,8 @@ export default {
             prenom: "Rap",
             id: 3
           },
-          nom:"Oups :/",
-          dateStart:'17/05/2022',
+          nom:"Oups :-",
+          dateStart:'05-17-2022',
           etatAvancement: 'FINI',
           importance: 'MEDIUM',
           description : "Les gars je crois que j'ai drop la database hihi ^^' Et j'ai drop le backup aussi :O Mais je me souviens de deux trois tables si vous voulez ! :3 " ,
@@ -285,8 +296,8 @@ export default {
             prenom: "Cli",
             id: 3
           },
-          dateAssign : '17/05/2022',
-          dateEnd : '17/05/2022',
+          dateAssign : '17-05-2022',
+          dateEnd : '17-05-2022',
         },
       ]
     }
@@ -325,7 +336,7 @@ export default {
       this.selectedFilters.rapporteur = null;
       this.selectedFilters.developpeur = null;
       this.recherche = null;
-    }
+    },
   },
   computed: {
     ticketsToDisplay : function (){
@@ -334,16 +345,16 @@ export default {
         result = result.filter(ticket =>
             ticket.nom.toLowerCase().includes(this.recherche.toLowerCase()))
       }
-      if(this.selectedFilters.projet?.id){
+      if(this.selectedFilters.projet){
         result = result.filter(ticket => ticket.projet.id === this.selectedFilters.projet.id)
       }
-      if(this.selectedFilters.client?.id){
+      if(this.selectedFilters.client){
         result = result.filter(ticket => ticket.client.id === this.selectedFilters.client.id)
       }
-      if(this.selectedFilters.rapporteur?.id){
+      if(this.selectedFilters.rapporteur){
         result = result.filter(ticket => ticket.rapporteur.id === this.selectedFilters.rapporteur.id)
       }
-      if(this.selectedFilters.client?.id){
+      if(this.selectedFilters.developpeur){
         result = result.filter(ticket => ticket.developpeur.id === this.selectedFilters.developpeur.id)
       }
       if(this.selectedFilters.avancement){
@@ -354,16 +365,19 @@ export default {
       }
       if(this.sortingOption){
         if(this.sortingOption.value === "dateDeCreationCroissante"){
-          result = result.sort((ticket1, ticket2) => new Date(ticket1.dateStart) - new Date(ticket2.dateStart))
+          result = result.sort((ticket1, ticket2) => new Date(ticket1.dateStart) - new Date(ticket2.dateStart));
         }
         if(this.sortingOption.value === "dateDeCreationDecroissante"){
-          result = result.sort((ticket1, ticket2) => new Date(ticket2.dateStart) - new Date(ticket1.dateStart))
+          result = result.sort((ticket1, ticket2) => new Date(ticket2.dateStart) - new Date(ticket1.dateStart));
         }
       }
       return result.length === 0 ? null : result;
     },
     isThereAFilterSelected : function (){
-      return Object.values(this.selectedFilters).every(filter => filter === null);
+      return !Object.values(this.selectedFilters).every(filter => filter === null) || this.recherche;
+    },
+    isDescriptionDisplayed : function(){
+      return this.descriptionDisplayed.value ? this.descriptionDisplayed.value : false;
     }
   }
 }

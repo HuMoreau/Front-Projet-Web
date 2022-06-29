@@ -6,18 +6,15 @@
       <span :class="'importance-badge ' + this.priorite.toLowerCase() + ' mr-2'">{{this.priorite}}</span>
       <div class="flex flex-column align-items-center ml-2 mr-3">
         <label><strong>Rapporteur</strong></label>
-        <label>{{this.ticketToDisplay.rapporteur.nom
-            ? this.ticketToDisplay.rapporteur.prenom + ' ' + this.ticketToDisplay.rapporteur.nom : '-'}}</label>
+        <label>{{abreviationNomRap}}</label>
       </div>
       <div class="flex flex-column align-items-center mr-3">
         <label><strong>Developpeur</strong></label>
-        <label>{{this.ticketToDisplay.developpeur.nom
-            ? this.ticketToDisplay.developpeur.prenom + ' ' + this.ticketToDisplay.developpeur.nom : '-'}}</label>
+        <label>{{abreviationNomDev}}</label>
       </div>
       <div class="flex flex-column align-items-center mr-3">
         <label><strong>Client</strong></label>
-        <label>{{this.ticketToDisplay.client.nom
-              ? this.ticketToDisplay.client.prenom + ' ' + this.ticketToDisplay.client.nom : '-'}}</label>
+        <label>{{abreviationNomClient}}</label>
       </div>
       <div class="flex flex-column align-items-center mr-3">
         <label><strong>Projet</strong></label>
@@ -66,6 +63,9 @@ export default {
     },
     deleteMe(){
       this.$emit('deleteMe', this.ticketToDisplay);
+    },
+    abregerNomPrenom(prenom, nom){
+      return Array.from(prenom)[0]+'. '+ nom;
     }
   },
   computed: {
@@ -90,6 +90,24 @@ export default {
       }
       if(this.ticketToDisplay.importance === "HIGH"){
         return 'Urgent';
+      }
+      return '-';
+    },
+    abreviationNomDev : function (){
+      if(this.ticketToDisplay.developpeur.prenom && this.ticketToDisplay.developpeur.nom){
+        return this.abregerNomPrenom(this.ticketToDisplay.developpeur.prenom, this.ticketToDisplay.developpeur.nom);
+      }
+      return '-';
+    },
+    abreviationNomRap : function (){
+      if(this.ticketToDisplay.rapporteur.prenom && this.ticketToDisplay.rapporteur.nom){
+        return this.abregerNomPrenom(this.ticketToDisplay.rapporteur.prenom, this.ticketToDisplay.rapporteur.nom);
+      }
+      return '-';
+    },
+    abreviationNomClient : function (){
+      if(this.ticketToDisplay.client.prenom && this.ticketToDisplay.client.nom){
+        return this.abregerNomPrenom(this.ticketToDisplay.client.prenom, this.ticketToDisplay.client.nom);
       }
       return '-';
     },
