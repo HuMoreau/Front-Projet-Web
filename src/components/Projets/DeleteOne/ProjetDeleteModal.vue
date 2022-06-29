@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import {apiService} from "@/main";
+
 export default {
   name: "ProjetDeleteModal",
   props: {
@@ -26,7 +28,14 @@ export default {
   },
   methods: {
     deleteProjet(){
-      this.$emit('closeMe');
+
+      // api call to delete client
+      apiService.delete("/projet/" + this.projetToDisplay.id).catch(error => {
+        console.log(error);
+        this.$emit('closeMe', false);
+      }).finally(() => {
+        this.$emit('closeMe', true);
+      });
     },
     abortSuppression(){
       this.$emit('closeMe');

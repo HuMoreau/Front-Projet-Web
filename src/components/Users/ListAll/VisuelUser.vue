@@ -15,11 +15,11 @@
     <small>{{userToDisplay.email}}</small>
     <div id="go_to_buttons">
       <PrimeButton icon="pi pi-pencil" class="p-button-rounded p-button-secondary p-button-sm p-button-text"
-                   @click="goTo(`/users/${userToDisplay.id}`, {mod : true})"/>
+                   @click="goTo(`/users/${userToDisplay.type}/${userToDisplay.id}`, {mod : true})"/>
       <PrimeButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm p-button-text"
                    @click="deleteMe"/>
       <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-sm p-button-text"
-                   @click="goTo(`/users/${userToDisplay.id}`)"/>
+                   @click="goTo(`/users/${userToDisplay.type}/${userToDisplay.id}`)"/>
     </div>
   </div>
 </template>

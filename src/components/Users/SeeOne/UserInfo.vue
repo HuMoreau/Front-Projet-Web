@@ -33,7 +33,7 @@
         <div class="col-4 grid">
           <div class="col-12 flex flex-column">
             <label>Rôle</label>
-            <SelectButton class="align-self-center" :disabled="!modification"
+            <SelectButton class="align-self-center" :disabled="true"
                           v-model="v$.utilisateur.type.$model" :options="typeOptions" dataKey="value"
                           :class="{'p-invalid': v$.utilisateur.type.$invalid && submitted}">
               <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('value', v$.$errors)" :key="error.$uid" class="p-error">{{error.$message}}</small>
@@ -79,6 +79,7 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import {required, email, alpha, helpers} from '@vuelidate/validators'
+import {apiService} from "@/main";
 export default {
   name: "UserInfo",
   setup () {
@@ -86,7 +87,6 @@ export default {
   },
   created() {
     if(this.$route.query.mod){
-      console.log(this.$route.query.mod)
       this.modification = (this.$route.query.mod === 'true');
     }
   },
@@ -109,11 +109,49 @@ export default {
       ]
     }
   },
+  mounted() {
+    // api call to get all users
+    this.populate();
+  },
   methods: {
+    populate() {
+      let queryURL = "";
+      switch (this.$route.params.type) {
+        case 'DEV':
+          queryURL = 'developpeur/' + this.$route.params.id;
+          break;
+        case 'RAP':
+          queryURL = 'rapporteur/' + this.$route.params.id;
+          break;
+
+        default: return;
+      }
+      apiService.get(queryURL).then(response => {
+        this.utilisateur = response.data;
+        this.utilisateur.type = this.typeOptions.find(e => e.value === this.$route.params.type);
+      }).catch(error => {
+        console.log(error);
+      });
+    },
     submitModification(invalid){
       this.submitted = invalid;
       if(!invalid){
-        this.v$.$reset();
+        let queryURL = "";
+        switch (this.$route.params.type) {
+          case 'DEV':
+            queryURL = 'developpeur/';
+            break;
+          case 'RAP':
+            queryURL = 'rapporteur/';
+            break;
+
+          default: return;
+        }
+        apiService.put(queryURL, this.utilisateur).then(() => {
+          this.$router.push('/users');
+        }).catch(error => {
+          console.log(error);
+        });
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){

@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import {apiService} from "@/main";
+
 export default {
   name: "UserDeleteModal",
   props: {
@@ -27,7 +29,25 @@ export default {
   },
   methods: {
     deleteUser(){
-      this.$emit('closeMe');
+      let queryURL = "";
+      switch (this.userToDisplay.type) {
+        case 'DEV':
+          queryURL = 'developpeur/' + this.userToDisplay.id;
+          break;
+        case 'RAP':
+          queryURL = 'rapporteur/' + this.userToDisplay.id;
+          break;
+
+        default: return;
+      }
+
+      // api call to delete client
+      apiService.delete(queryURL).catch(error => {
+        console.log(error);
+        this.$emit('closeMe', false);
+      }).finally(() => {
+        this.$emit('closeMe', true);
+      });
     },
     abortSuppression(){
       this.$emit('closeMe');
