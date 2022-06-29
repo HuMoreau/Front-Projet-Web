@@ -2,26 +2,32 @@
   <div class="line-in-list flex-column">
     <div class="flex align-items-center">
       <label class="p-panel-title mr-3"><strong>{{this.ticketToDisplay.nom}}</strong></label>
-      <span :class="'importance-badge ' + this.ticketToDisplay.etatAvancement + ' mr-2'">{{this.avancement}}</span>
-      <span :class="'importance-badge ' + this.priorite.toLowerCase() + ' mr-2'">{{this.priorite}}</span>
       <div class="flex flex-column align-items-center ml-2 mr-3">
-        <label><strong>Rapporteur</strong></label>
+        <label class="mb-1"><strong>Avancement</strong></label>
+        <span :class="'importance-badge ' + this.ticketToDisplay.etatAvancement">{{this.avancement}}</span>
+      </div>
+      <div class="flex flex-column align-items-center ml-2 mr-3">
+        <label class="mb-1"><strong>Priorité</strong></label>
+        <span :class="'importance-badge ' + this.priorite.toLowerCase()">{{this.priorite}}</span>
+      </div>
+      <div class="flex flex-column align-items-center ml-2 mr-3">
+        <label class="mb-1"><strong>Rapporteur</strong></label>
         <label>{{abreviationNomRap}}</label>
       </div>
       <div class="flex flex-column align-items-center mr-3">
-        <label><strong>Developpeur</strong></label>
+        <label class="mb-1"><strong>Developpeur</strong></label>
         <label>{{abreviationNomDev}}</label>
       </div>
       <div class="flex flex-column align-items-center mr-3">
-        <label><strong>Client</strong></label>
+        <label class="mb-1"><strong>Client</strong></label>
         <label>{{abreviationNomClient}}</label>
       </div>
       <div class="flex flex-column align-items-center mr-3">
-        <label><strong>Projet</strong></label>
+        <label class="mb-1"><strong>Projet</strong></label>
         <label>{{this.ticketToDisplay.projet.nom}}</label>
       </div>
       <div class="flex flex-column align-items-center mr-3">
-        <label><strong>Date création</strong></label>
+        <label class="mb-1"><strong>Date création</strong></label>
         <label>{{this.ticketToDisplay.dateStart}}</label>
       </div>
       <div id="go_to_buttons">
