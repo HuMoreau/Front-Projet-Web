@@ -9,6 +9,7 @@ import ProjetsList from "@/components/Projets/ListAll/ProjetsList";
 import ProjetInfo from "@/components/Projets/SeeOne/ProjetInfo";
 import ProjetCreate from "@/components/Projets/CreateOne/ProjetCreate";
 import TicketsList from "@/components/Ticket/ListAll/TicketsList";
+import TicketInfo from "@/components/Ticket/SeeOne/TicketInfo";
 
 const routes = [
     {
@@ -52,12 +53,12 @@ const routes = [
         component: ProjetsList,
     },
     {
-        name: 'ProjetsCreate',
+        name: 'ProjetCreate',
         path: '/projets/new',
         component: ProjetCreate,
     },
     {
-        name: 'ProjetsInfo',
+        name: 'ProjetInfo',
         path: '/projets/:id',
         component: ProjetInfo,
     },
@@ -65,6 +66,11 @@ const routes = [
         name: 'Tickets',
         path: '/tickets',
         component: TicketsList,
+    },
+    {
+        name: 'TicketInfo',
+        path: '/tickets/:id',
+        component: TicketInfo,
     },
 ]
 

@@ -95,3 +95,14 @@ a{
 .utility-buttons{
     margin-left: auto;
 }
+
+.iconBtn{
+    font-size: 0.65rem;
+    border-radius: 15px;
+    padding: 5px;
+    color: #64748B;
+}
+
+.iconBtn:hover{
+    background-color: rgba(100, 116, 139, 0.04);
+}

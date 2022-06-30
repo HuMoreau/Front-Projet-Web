@@ -144,15 +144,21 @@
         </div>
       </div>
     </div>
+
+    <!--  Modal de suppression  -->
+    <TicketDeleteModal @closeMe="closeDeleteModal" :displayed="isDeletionModalDisplayed" :ticket-to-display="ticketToDelete"/>
+
   </div>
+
 </template>
 
 <script>
 
 import VisuelTicket from "@/components/Ticket/ListAll/VisuelTicket";
+import TicketDeleteModal from "@/components/Ticket/DeleteOne/TicketDeleteModal";
 export default {
   name: "TicketsList",
-  components: {VisuelTicket},
+  components: {TicketDeleteModal, VisuelTicket},
   data() {
     return {
       filterDisplayed : false,
@@ -305,6 +311,7 @@ export default {
   methods: {
     deleteTicket(event){
       this.ticketToDelete = event;
+      console.log(this.ticketToDelete)
       this.isDeletionModalDisplayed = true;
     },
     closeDeleteModal(){

@@ -31,15 +31,21 @@
         <label>{{this.ticketToDisplay.dateStart}}</label>
       </div>
       <div id="go_to_buttons">
+        <PrimeButton :icon="localyDisplayDescription ? 'pi pi-minus-circle' : 'pi pi-info-circle'"
+                     class="p-button-rounded p-button-secondary p-button-text"
+                     :disabled="this.displayDescription"
+                     @click="showOrHideDescription()"/>
         <PrimeButton icon="pi pi-pencil" class="p-button-rounded p-button-secondary p-button-sm p-button-text"
                      @click="goTo(`/tickets/${ticketToDisplay.id}`, {mod : true})"/>
         <PrimeButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm p-button-text"
                      @click="deleteMe"/>
+        <PrimeButton icon="pi pi-bookmark"
+                     class="p-button-rounded p-button-text"/>
         <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-sm p-button-text"
                      @click="goTo(`/tickets/${ticketToDisplay.id}`)"/>
       </div>
     </div>
-    <div v-if="displayDescription" class="m-2 p-1">
+    <div v-if="displayDescription || localyDisplayDescription" class="m-2 p-1">
       <small>{{this.ticketToDisplay.description}}</small>
     </div>
   </div>
@@ -51,6 +57,11 @@ export default {
   props : {
     ticketToDisplay : Object,
     displayDescription : Boolean,
+  },
+  data() {
+    return {
+      localyDisplayDescription : false,
+    }
   },
   methods: {
     goTo(link, params){
@@ -72,6 +83,9 @@ export default {
     },
     abregerNomPrenom(prenom, nom){
       return Array.from(prenom)[0]+'. '+ nom;
+    },
+    showOrHideDescription() {
+      this.localyDisplayDescription = !this.localyDisplayDescription;
     }
   },
   computed: {
@@ -117,6 +131,13 @@ export default {
       }
       return '-';
     },
+  },
+  watch: {
+    displayDescription(value){
+      if(value === false){
+        this.localyDisplayDescription = false;
+      }
+    }
   }
 }
 </script>
