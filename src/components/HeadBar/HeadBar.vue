@@ -34,6 +34,7 @@ export default {
             {
               label:'Nouveau',
               icon:'pi pi-fw pi-plus',
+              to: '/tickets/new'
             }
           ]
         },

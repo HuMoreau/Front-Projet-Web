@@ -11,12 +11,18 @@ import ProjetCreate from "@/components/Projets/CreateOne/ProjetCreate";
 import TicketsList from "@/components/Ticket/ListAll/TicketsList";
 import TicketInfo from "@/components/Ticket/SeeOne/TicketInfo";
 import TicketCreate from "@/components/Ticket/CreateOne/TicketCreate";
+import AuthentificationPage from "@/components/Authentification/AuthentificationPage";
 
 const routes = [
     {
         name: 'Home',
         path: '/',
         component: HomePage,
+    },
+    {
+        name: 'Authentication',
+        path: '/auth',
+        component: AuthentificationPage,
     },
     {
         name: 'Users',

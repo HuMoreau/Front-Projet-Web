@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <HeadBar id="headbar"/>
+    <HeadBar v-if="showHeadbar" id="headbar"/>
     <router-view></router-view>
   </div>
 </template>
@@ -11,6 +11,11 @@ export default {
   name: 'App',
   components: {
     HeadBar
+  },
+  data(){
+    return {
+      showHeadbar : true,
+    }
   }
 }
 </script>
