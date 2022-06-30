@@ -3,26 +3,10 @@
     <div class="p-panel-header flex align-items-center">
       <PrimeButton icon="pi pi-chevron-left" class="p-button-rounded p-button-lg p-button-secondary p-button-text mr-3"
                    @click="goTo('/tickets')"/>
-      <label class="p-panel-title mr-5">Infos - {{ticket.nom}}</label>
-      <div class="flex flex-column mr-3 align-items-center">
-        <label>Création</label>
-        <label><i>{{ticket.dateStart ? ticket.dateStart : '-'}}</i></label>
-      </div>
-      <div class="flex flex-column mr-3 align-items-center">
-        <label>Assignation</label>
-        <label><i>{{ticket.dateAssign ? ticket.dateAssign : '-'}}</i></label>
-      </div>
-      <div class="flex flex-column mr-3 align-items-center">
-        <label>Fermeture</label>
-        <label><i>{{ticket.dateEnd ? ticket.dateEnd : '-'}}</i></label>
-      </div>
+      <label class="p-panel-title mr-5">Nouveau ticket</label>
       <div class="inline-flex align-items-center ml-auto">
-        <div class="flex flex-column align-items-center mr-2">
-          <label>{{modification ? 'Modifiable' : 'Modifier'}}</label>
-          <InputSwitch v-model="modification"/>
-        </div>
         <PrimeButton icon="pi pi-save" class="p-button-rounded p-button-lg p-button-text"
-                     :disabled="!(modification && v$.$anyDirty)" @click="submitModification(v$.$invalid)"/>
+                     :disabled="!v$.$anyDirty" @click="submitCreation(v$.$invalid)"/>
       </div>
     </div>
     <div class="grid grid-nogutter p-panel-content">
@@ -34,8 +18,8 @@
               {{this.nomLength}} / {{this.nomMaxLength}}
             </small>
           </div>
-          <InputText v-model="v$.ticket.nom.$model" :disabled="!modification"
-                     :class="{'p-invalid': v$.ticket.nom.$invalid && submitted}">
+          <InputText v-model="v$.ticket.nom.$model"  placeholder="Nom"
+                     :class="{'p-invalid': (v$.ticket.nom.$invalid && submitted) || this.nomLength > this.nomMaxLength}">
           </InputText>
           <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('nom', v$.$errors)" :key="error.$uid" class="p-error">{{error.$message}}</small>
         </div>
@@ -44,7 +28,7 @@
         <div class="flex flex-column">
           <label>Avancement</label>
           <DropDown placeholder="Avancement" v-model="v$.ticket.etatAvancement.$model"
-                    :options="avancementList" :disabled="!modification"
+                    :options="avancementList" 
                     :class="{'p-invalid': v$.ticket.etatAvancement.$invalid && submitted}">
             <template #value="slotProps">
               <div v-if="slotProps.value">
@@ -69,7 +53,7 @@
         <div class="flex flex-column">
           <label>Importance</label>
           <DropDown placeholder="Importance" v-model="v$.ticket.importance.$model"
-                    :options="importanceList" :disabled="!modification"
+                    :options="importanceList" 
                     :class="{'p-invalid': v$.ticket.importance.$invalid && submitted}">
             <template #value="slotProps">
               <div v-if="slotProps.value">
@@ -92,9 +76,9 @@
       </div>
       <div class="col-3 p-2">
         <div class="flex flex-column">
-          <div class="flex"><label>Projet </label><i class="pi pi-chevron-right iconBtn ml-1" @click="goTo(`/projets/${ticket.projet.id}`)"></i></div>
+          <label>Projet </label>
           <DropDown  placeholder="Projet" v-model="v$.ticket.projet.$model"
-                     :options="projetsList" optionLabel="id" :filter="true" :disabled="!modification"
+                     :options="projetsList" optionLabel="id" :filter="true" 
                      :class="{'p-invalid': v$.ticket.projet.$invalid && submitted}">
             <template #value="slotProps">
               <div v-if="slotProps.value">
@@ -115,10 +99,10 @@
       </div>
       <div class="col-4 p-2">
         <div class="flex flex-column">
-          <div class="flex"><label>Client </label><i class="pi pi-chevron-right iconBtn ml-1" @click="goTo(`/clients/${ticket.client.id}`)"></i></div>
+          <label>Client </label>
           <DropDown placeholder="Client" v-model="v$.ticket.client.$model"
                     :options="clientsList" optionLabel="id" :filter="true"
-                    filterPlaceholder="Nom" :disabled="!modification"
+                    filterPlaceholder="Nom" 
                     :class="{'p-invalid': v$.ticket.client.$invalid && submitted}">
             <template #value="slotProps">
               <div v-if="slotProps.value">
@@ -145,10 +129,10 @@
       </div>
       <div class="col-4 p-2">
         <div class="flex flex-column">
-          <div class="flex"><label>Rapporteur </label><i class="pi pi-chevron-right iconBtn ml-1" @click="goTo(`/users/rap/${ticket.rapporteur.id}`)"></i></div>
+          <label>Rapporteur </label>
           <DropDown placeholder="Rapporteur" v-model="v$.ticket.rapporteur.$model"
                     :options="rapporteursList" optionLabel="id" :filter="true"
-                    filterPlaceholder="Nom" :disabled="!modification"
+                    filterPlaceholder="Nom"
                     :class="{'p-invalid': v$.ticket.rapporteur.$invalid && submitted}">
             <template #value="slotProps">
               <div v-if="slotProps.value">
@@ -175,10 +159,10 @@
       </div>
       <div class="col-4 p-2">
         <div class="flex flex-column">
-          <div class="flex"><label>Developpeur </label><i class="pi pi-chevron-right iconBtn ml-1" @click="goTo(`/users/dev/${ticket.developpeur.id}`)"></i></div>
+          <label>Developpeur </label>
           <DropDown placeholder="Developpeur" v-model="v$.ticket.developpeur.$model"
                     :options="developpeursList" optionLabel="id" :filter="true"
-                    filterPlaceholder="Nom" :disabled="!modification"
+                    filterPlaceholder="Nom" showClear
                     :class="{'p-invalid': v$.ticket.developpeur.$invalid && submitted}">
             <template #value="slotProps">
               <div v-if="slotProps.value">
@@ -206,8 +190,8 @@
         <div class="flex flex-column">
           <div class="flex justify-content-between"><label>Description</label>
             <small :class="{'text-invalid': this.descriptionLength > this.descriptionMaxLength}">{{this.descriptionLength}} / {{this.descriptionMaxLength}}</small></div>
-          <TextArea v-model="v$.ticket.description.$model" :autoResize="true" :disabled="!modification" rows="4"
-                    :class="{'p-invalid': v$.ticket.description.$invalid && submitted}"/>
+          <TextArea v-model="v$.ticket.description.$model" :autoResize="true"  rows="4"
+                    :class="{'p-invalid': (v$.ticket.description.$invalid && submitted) || this.descriptionLength > this.descriptionMaxLength}"/>
           <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('description', v$.$errors)" :key="error.$uid" class="p-error">{{error.$message}}</small>
         </div>
       </div>
@@ -219,48 +203,32 @@
 import useVuelidate from '@vuelidate/core'
 import {required, helpers, requiredIf, maxLength} from '@vuelidate/validators'
 export default {
-  name: "TicketInfo",
+  name: "TicketCreate",
   setup () {
     return { v$: useVuelidate() }
   },
   created() {
     if(this.$route.query.mod){
-      this.modification = (this.$route.query.mod === 'true');
+      //this.modification = (this.$route.query.mod === 'true');
     }
   },
   data(){
     return {
-      modification: false,
       submitted: false,
       nomMaxLength : 25,
       descriptionMaxLength : 500,
       ticket: {
-        id: 1,
-        developpeur: {
-          nom: "Armand",
-          prenom: "Louison",
-          id: 1
-        },
-        rapporteur: {
-          nom: "Conchon",
-          prenom: "Guillaume",
-          id: 1
-        },
-        nom:'Ça marche po',
-        dateStart:'05-16-2022',
-        etatAvancement: 'EN_COURS',
-        importance: 'HIGH',
-        description : "C'est un désastre le projet ne fonctionne plus, et l'unique disque dur sur lequel était le code est tombé dans la mare aux canards. Les serveurs ont cramés parce que Pierrot à oublié des tranches de salami dans la ventilation. La deadline est pour ce soir et le stagiaire est parti hier (comme ma femme). Il faut que je me dépêche d'apprendre le C++ sur Open Classroom ! :)",
-        projet: {
-          nom: "Projet 1",
-          id: 1
-        },
-        client: {
-          nom: "Lumineau",
-          prenom: "Théophane",
-          id: 1
-        },
-        dateAssign : '06-17-2022',
+        id: null,
+        developpeur: null,
+        rapporteur: null,
+        nom: null,
+        dateStart: null,
+        etatAvancement: 'A_FAIRE',
+        importance: null,
+        description : null,
+        projet: null,
+        client: null,
+        dateAssign : null,
         dateEnd : null,
       },
       avancementList : ['A_FAIRE', 'EN_COURS', 'FINI'],
@@ -302,7 +270,7 @@ export default {
     }
   },
   methods: {
-    submitModification(invalid){
+    submitCreation(invalid){
       this.submitted = invalid;
       if(!invalid){
         this.v$.$reset();

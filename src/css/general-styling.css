@@ -106,3 +106,7 @@ a{
 .iconBtn:hover{
     background-color: rgba(100, 116, 139, 0.04);
 }
+
+.text-invalid{
+    color : #e24c4c;
+}
