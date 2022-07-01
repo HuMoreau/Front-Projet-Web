@@ -26,6 +26,7 @@
 
 <script>
 import {useAuthStore} from "@/store/authStore";
+import {apiService} from "@/main";
 
 export default {
   name: "AuthentificationPage",
@@ -39,29 +40,19 @@ export default {
       email : null,
       mdp : null,
       errorMessage : null,
-      users : [
-        {
-          id : 1,
-          type : 'DEV',
-          prenom : 'Anthony',
-          nom : 'Paboeuf',
-          noisettes : 666,
-          email : "mail@dev.com",
-          password : 'password'
-        },
-        {
-          id : 2,
-          type : 'RAP',
-          prenom : 'Lucie',
-          nom : 'Tan',
-          noisettes : 0,
-          email : "mail@rap.com",
-          password : 'admin'
-        },
-      ]
+      users : []
     }
   },
+  mounted() {
+    // api
+    this.populate();
+  },
   methods : {
+    populate() {
+      apiService.get('/utils/users').then(response => {
+        this.users = response.data;
+      });
+    },
     checkForAuth(){
       let user = this.findUserFromEmail(); //ICI C'EST LA REQUETE API
       if(!user){
