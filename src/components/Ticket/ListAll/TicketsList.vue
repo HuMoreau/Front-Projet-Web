@@ -237,18 +237,12 @@ export default {
       this.isDeletionModalDisplayed = false;
     },
     goTo(link, params){
-      let result = "http://localhost:8080" + link;
+
       if(params){
-        result += "?";
-        Object.entries(params).forEach(param => {
-          result += param[0];
-          result += "=";
-          result += param[1];
-          result += "&"
-        });
-        result.slice(0, -1);
+        this.$router.push({path: link, query: params});
+        return;
       }
-      window.location.href = result;
+      this.$router.push(link);
     },
     showOrHideFilters(){
       this.filterDisplayed = !this.filterDisplayed;
