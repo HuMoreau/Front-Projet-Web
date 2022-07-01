@@ -202,6 +202,7 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import {required, helpers, requiredIf, maxLength} from '@vuelidate/validators'
+import {apiService} from "@/main";
 export default {
   name: "TicketCreate",
   setup () {
@@ -237,43 +238,66 @@ export default {
         {value : 'EN_COURS', name : 'En cours'},
         {value : 'FINI', name : 'Fini'},
       ],
-      importanceList : ['HIGH', 'MEDIUM', 'LOW'],
+      importanceList : ['URGENT', 'IMPORTANT', 'MINEUR'],
       importanceValueList : [
-        {value : 'HIGH', name : 'Urgent'},
-        {value : 'MEDIUM', name : 'Important'},
-        {value : 'LOW', name : 'Mineur'},
+        {value : 'URGENT', name : 'Urgent'},
+        {value : 'IMPORTANT', name : 'Important'},
+        {value : 'MINEUR', name : 'Mineur'},
       ],
-      projetsList : [
-        {id : 1, nom : 'Projet 1'},
-        {id : 2, nom : 'Projet 2'},
-        {id : 3, nom : 'Projet 3'},
-        {id : 4, nom : 'Projet 4'},
-      ],
-      clientsList : [
-        {id : 1, prenom : "Théophane", nom : 'Lumineau'},
-        {id : 2, prenom : 'Aurélien', nom : 'Avite'},
-        {id : 3, prenom : 'Virgile', nom : 'Armand'},
-        {id : 4, prenom : 'Nathan', nom : 'Barre'},
-      ],
-      rapporteursList : [
-        {id : 1, prenom : 'Guillaume', nom : 'Conchon'},
-        {id : 2, prenom : 'Thibaut', nom : 'Goldsborough'},
-        {id : 3, prenom : 'Guillaume', nom : 'Fustaillon'},
-        {id : 4, prenom : 'Théo', nom : 'Coucharierre'},
-      ],
-      developpeursList : [
-        {id : 1, prenom : 'Louison', nom : 'Armand'},
-        {id : 2, prenom : 'Sebastien', nom : 'Agnez'},
-        {id : 3, prenom : 'Guillaume', nom : 'Conchon'},
-        {id : 4, prenom : 'Flavien', nom : 'Perineau'},
-      ],
+      projetsList : [],
+      clientsList : [],
+      rapporteursList : [],
+      developpeursList : [],
     }
   },
+  mounted() {
+
+    // api
+    this.populate();
+  },
   methods: {
+    populate() {
+      apiService.get('projet').then(response => {
+        this.projetsList = response.data;
+      });
+      apiService.get('client').then(response => {
+        this.clientsList = response.data;
+      });
+      apiService.get('rapporteur').then(response => {
+        this.rapporteursList = response.data;
+      });
+      apiService.get('developpeur').then(response => {
+        this.developpeursList = response.data;
+      });
+    },
     submitCreation(invalid){
       this.submitted = invalid;
       if(!invalid){
         this.v$.$reset();
+
+        // building body
+        const date = new Date();
+
+        const dateActuelle = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate() + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds();
+
+        if (this.ticket.developpeur) this.ticket.dateAssign = dateActuelle;
+
+        let body = {
+          idProjet: this.ticket.projet.id,
+          idClient: this.ticket.client.id,
+          idRapporteur: this.ticket.rapporteur.id,
+          idDev: this.ticket.developpeur ? this.ticket.developpeur.id : null,
+          nom: this.ticket.nom,
+          dateStart: dateActuelle,
+          etatAvancement: this.ticket.etatAvancement,
+          importance: this.ticket.importance,
+          description: this.ticket.description,
+        };
+
+        // sending request
+        apiService.post('ticket', body).then(() => {
+          this.$router.push('/tickets');
+        });
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){

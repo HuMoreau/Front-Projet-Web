@@ -102,13 +102,13 @@ export default {
       return '-';
     },
     priorite : function (){
-      if(this.ticketToDisplay.importance === "LOW"){
+      if(this.ticketToDisplay.importance === "MINEUR"){
         return 'Mineur';
       }
-      if(this.ticketToDisplay.importance === "MEDIUM"){
+      if(this.ticketToDisplay.importance === "IMPORTANT"){
         return 'Important';
       }
-      if(this.ticketToDisplay.importance === "HIGH"){
+      if(this.ticketToDisplay.importance === "URGENT"){
         return 'Urgent';
       }
       return '-';

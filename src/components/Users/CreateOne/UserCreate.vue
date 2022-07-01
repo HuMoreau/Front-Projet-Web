@@ -111,7 +111,7 @@ export default {
       this.submitted = invalid;
       if(!invalid){
         this.v$.$reset();
-        console.log(this.utilisateur);
+
         // api call to create client
         // if success, redirect to client list
         // if error, display error message

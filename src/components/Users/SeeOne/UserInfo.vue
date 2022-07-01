@@ -116,7 +116,7 @@ export default {
   methods: {
     populate() {
       let queryURL = "";
-      switch (this.$route.params.type) {
+      switch (this.$route.params.type.toUpperCase()) {
         case 'DEV':
           queryURL = 'developpeur/' + this.$route.params.id;
           break;

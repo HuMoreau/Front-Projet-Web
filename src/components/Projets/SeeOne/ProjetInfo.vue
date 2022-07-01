@@ -87,7 +87,7 @@ export default {
       modification : false,
       submitted : false,
       lineBasicData: {
-        labels: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet'],
+        labels: [],
         datasets: [
           {
             label: 'Nombre de tickets',
@@ -114,7 +114,8 @@ export default {
         let data = response.data;
         console.log(response.data);
         for (let i = 0; i < data.months.length; i++) {
-          this.lineBasicData.datasets[0].data.push(data.months[i].HIGH + data.months[i].MEDIUM + data.months[i].LOW);
+          this.lineBasicData.labels.push(data.months[i].month);
+          this.lineBasicData.datasets[0].data.push(data.months[i].URGENT + data.months[i].IMPORTANT + data.months[i].MINEUR);
           console.log(this.lineBasicData.datasets[0].data[i]);
         }
 

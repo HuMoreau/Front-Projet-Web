@@ -146,7 +146,7 @@
     </div>
 
     <!--  Modal de suppression  -->
-    <TicketDeleteModal @closeMe="closeDeleteModal" :displayed="isDeletionModalDisplayed" :ticket-to-display="ticketToDelete"/>
+    <TicketDeleteModal @closeMe="closeDeleteModal($event)" :displayed="isDeletionModalDisplayed" :ticket-to-display="ticketToDelete"/>
 
   </div>
 
@@ -156,6 +156,7 @@
 
 import VisuelTicket from "@/components/Ticket/ListAll/VisuelTicket";
 import TicketDeleteModal from "@/components/Ticket/DeleteOne/TicketDeleteModal";
+import {apiService} from "@/main";
 export default {
   name: "TicketsList",
   components: {TicketDeleteModal, VisuelTicket},
@@ -180,141 +181,58 @@ export default {
         projet : null,
       },
       importanceList : [
-        {value : 'HIGH', name : 'Urgent'},
-        {value : 'MEDIUM', name : 'Important'},
-        {value : 'LOW', name : 'Mineur'},
+        {value : 'URGENT', name : 'Urgent'},
+        {value : 'IMPORTANT', name : 'Important'},
+        {value : 'MINEUR', name : 'Mineur'},
       ],
       avancementList : [
         {value : 'A_FAIRE', name : 'À faire'},
         {value : 'EN_COURS', name : 'En cours'},
         {value : 'FINI', name : 'Fini'},
       ],
-      developpeursList : [
-        {id : 1, prenom : 'Louison', nom : 'Armand'},
-        {id : 2, prenom : 'Sebastien', nom : 'Agnez'},
-        {id : 3, prenom : 'Guillaume', nom : 'Conchon'},
-        {id : 4, prenom : 'Flavien', nom : 'Perineau'},
-      ],
-      rapporteursList : [
-        {id : 1, prenom : 'Marie', nom : 'Royal'},
-        {id : 2, prenom : 'Thibaut', nom : 'Goldsborough'},
-        {id : 3, prenom : 'Guillaume', nom : 'Fustaillon'},
-        {id : 4, prenom : 'Théo', nom : 'Coucharierre'},
-      ],
-      clientsList : [
-        {id : 1, prenom : 'Pierre', nom : 'LeGoff'},
-        {id : 2, prenom : 'Aurélien', nom : 'Avite'},
-        {id : 3, prenom : 'Virgile', nom : 'Armand'},
-        {id : 4, prenom : 'Nathan', nom : 'Barre'},
-      ],
-      projetsList : [
-        {id : 1, nom : 'Projet 1'},
-        {id : 2, nom : 'Projet 2'},
-        {id : 3, nom : 'Projet 3'},
-        {id : 4, nom : 'Projet 4'},
-      ],
+      developpeursList : [],
+      rapporteursList : [],
+      clientsList : [],
+      projetsList : [],
       displayDescriptionOptions : [
         {icon : 'pi pi-minus-circle', value : false},
         {icon : 'pi pi-info-circle', value : true}
       ],
-      tickets : [
-        {
-          id: 1,
-          developpeur: {
-            nom: "Armand",
-            prenom: "Louison",
-            id: 1
-          },
-          rapporteur: {
-            nom: "Conchon",
-            prenom: "Guillaume",
-            id: 1
-          },
-          nom:'Ça marche po',
-          dateStart:'05-16-2022',
-          etatAvancement: 'EN_COURS',
-          importance: 'HIGH',
-          description : "C'est un désastre le projet ne fonctionne plus, et l'unique disque dur sur lequel était le code est tombé dans la mare aux canards. Les serveurs ont cramés parce que Pierrot à oublié des tranches de salami dans la ventilation. La deadline est pour ce soir et le stagiaire est parti hier (comme ma femme). Il faut que je me dépêche d'apprendre le C++ sur Open Classroom ! :)",
-          projet: {
-            nom: "Projet 1",
-            id: 1
-          },
-          client: {
-            nom: "Lumineau",
-            prenom: "Théophane",
-            id: 1
-          },
-          dateAssign : null,
-          dateEnd : null,
-        },
-        {
-          id: 2,
-          developpeur: {
-            nom: "Loppeur",
-            prenom: "Dev",
-            id: 2
-          },
-          rapporteur: {
-            nom: "Porteur",
-            prenom: "Rap",
-            id: 2
-          },
-          nom:'Fote dortograffe',
-          dateStart:'05-18-2022',
-          etatAvancement: 'A_FAIRE',
-          importance: 'LOW',
-          description : "Le clian ce plaint des fotes dans les label de lapli, srx fête atenssion les ga aprai je me fé grondé par les clian et parfoi jy pance dans mon lis la nui avec come quan Margo elle voulé pa aitre mon namoureuze en sinquiaime et je pleur après :'(",
-          projet: {
-            nom: "Projet 1",
-            id: 2
-          },
-          client: {
-            nom: "Ent",
-            prenom: "Cli",
-            id: 2
-          },
-          dateAssign : '17-05-2022',
-          dateEnd : null,
-        },
-        {
-          id: 3,
-          developpeur: {
-            nom: "Loppeur",
-            prenom: "Dev",
-            id: 3
-          },
-          rapporteur: {
-            nom: "Porteur",
-            prenom: "Rap",
-            id: 3
-          },
-          nom:"Oups :-/",
-          dateStart:'05-17-2022',
-          etatAvancement: 'FINI',
-          importance: 'MEDIUM',
-          description : "Les gars je crois que j'ai drop la database hihi ^^' Et j'ai drop le backup aussi :O Mais je me souviens de deux trois tables si vous voulez ! :3 " ,
-          projet: {
-            nom: "Projet 1",
-            id: 3
-          },
-          client: {
-            nom: "Ent",
-            prenom: "Cli",
-            id: 3
-          },
-          dateAssign : '17-05-2022',
-          dateEnd : '17-05-2022',
-        },
-      ]
+      tickets : []
     }
   },
+  mounted() {
+    // api
+    this.populate();
+  },
   methods: {
+    populate() {
+      apiService.get("developpeur").then(response => {
+        this.developpeursList = response.data;
+      });
+      apiService.get("rapporteur").then(response => {
+        this.rapporteursList = response.data;
+      });
+      apiService.get("client").then(response => {
+        this.clientsList = response.data;
+      });
+      apiService.get("projet").then(response => {
+        this.projetsList = response.data;
+      });
+
+      // list of tickets
+      apiService.get("ticket").then(response => {
+        this.tickets = response.data;
+      });
+    },
     deleteTicket(event){
       this.ticketToDelete = event;
-      console.log(this.ticketToDelete)
       this.isDeletionModalDisplayed = true;
     },
-    closeDeleteModal(){
+    closeDeleteModal(isDeleted){
+      if (isDeleted) {
+        this.populate();
+      }
       this.ticketToDelete = null;
       this.isDeletionModalDisplayed = false;
     },
