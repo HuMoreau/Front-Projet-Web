@@ -29,10 +29,12 @@ export default {
             {
               label:'Voir',
               icon:'pi pi-fw pi-eye',
+              to: '/tickets'
             },
             {
               label:'Nouveau',
               icon:'pi pi-fw pi-plus',
+              to: '/tickets/new'
             }
           ]
         },

@@ -23,6 +23,21 @@
     color: #256029;
 }
 
+.importance-badge.A_FAIRE {
+    background-color: #FFCDD2;
+    color: #C63737;
+}
+
+.importance-badge.EN_COURS {
+    background-color: #ffd8b2;
+    color: #805b36;
+}
+
+.importance-badge.FINI {
+    background-color: #c8e6c9;
+    color: #256029;
+}
+
 .p-panel-title{
     font-size: 1.5em;
     font-weight: bold;
@@ -75,4 +90,23 @@ a{
 .line-in-list{
     border-bottom: 1px solid #dee2e6;
     padding: 10px
+}
+
+.utility-buttons{
+    margin-left: auto;
+}
+
+.iconBtn{
+    font-size: 0.65rem;
+    border-radius: 15px;
+    padding: 5px;
+    color: #64748B;
+}
+
+.iconBtn:hover{
+    background-color: rgba(100, 116, 139, 0.04);
+}
+
+.text-invalid{
+    color : #e24c4c;
 }

@@ -124,7 +124,6 @@ export default {
       });
     },
     submitModification(invalid){
-      this.$refs.graphique.chart.update();
       this.submitted = invalid;
       if(!invalid){
         this.v$.$reset();

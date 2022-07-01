@@ -7,12 +7,22 @@ import ClientInfo from "@/components/Clients/SeeOne/ClientInfo";
 import ClientCreate from "@/components/Clients/CreateOne/ClientCreate";
 import ProjetsList from "@/components/Projets/ListAll/ProjetsList";
 import ProjetInfo from "@/components/Projets/SeeOne/ProjetInfo";
+import ProjetCreate from "@/components/Projets/CreateOne/ProjetCreate";
+import TicketsList from "@/components/Ticket/ListAll/TicketsList";
+import TicketInfo from "@/components/Ticket/SeeOne/TicketInfo";
+import TicketCreate from "@/components/Ticket/CreateOne/TicketCreate";
+import AuthentificationPage from "@/components/Authentification/AuthentificationPage";
 
 const routes = [
     {
         name: 'Home',
         path: '/',
         component: HomePage,
+    },
+    {
+        name: 'Authentication',
+        path: '/auth',
+        component: AuthentificationPage,
     },
     {
         name: 'Users',
@@ -50,9 +60,29 @@ const routes = [
         component: ProjetsList,
     },
     {
-        name: 'ProjetsInfo',
+        name: 'ProjetCreate',
+        path: '/projets/new',
+        component: ProjetCreate,
+    },
+    {
+        name: 'ProjetInfo',
         path: '/projets/:id',
         component: ProjetInfo,
+    },
+    {
+        name: 'Tickets',
+        path: '/tickets',
+        component: TicketsList,
+    },
+    {
+        name: 'TicketCreate',
+        path: '/tickets/new',
+        component: TicketCreate,
+    },
+    {
+        name: 'TicketInfo',
+        path: '/tickets/:id',
+        component: TicketInfo,
     },
 ]
 
