@@ -25,7 +25,7 @@ import 'primevue/resources/themes/lara-light-blue/theme.css'     //theme
 import './css/general-styling.css'                       //personal theme
 import 'primevue/resources/primevue.min.css'               //core css
 import 'primeicons/primeicons.css'                         //icons
-import 'primeflex/primeflex.css'                           //primeflex
+import 'primeflex/primeflex.css'                       //primeflex
 
 Vue.config.productionTip = false
 Vue.use(PrimeVue);
@@ -52,6 +52,7 @@ const router = new VueRouter({
   mode: 'history',
 })
 
+
 const pinia = createPinia()
 
 export const apiService = axios.create({
@@ -62,9 +63,23 @@ export const apiService = axios.create({
   }
 })
 
+let isAuth = false;
+
+router.beforeEach( async (to, from, next) => {
+  console.log(isAuth);
+  if(!isAuth && to.name !== 'Authentication'){
+    router.push('/auth');
+  }
+  next();
+})
+
 new Vue({
   router : router,
   pinia,
   render: h => h(App),
 }).$mount('#app')
 
+import {useAuthStore} from "@/store/authStore";
+import {storeToRefs} from "pinia";
+const authStore = useAuthStore();
+isAuth = storeToRefs(authStore);

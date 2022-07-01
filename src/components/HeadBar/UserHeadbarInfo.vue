@@ -10,7 +10,7 @@
       </div>
     </div>
     <PrimeButton icon="pi pi-cog" class="p-button-rounded p-button-secondary p-button-text" />
-    <PrimeButton icon="pi pi-sign-out" class="p-button-rounded p-button-text" />
+    <PrimeButton icon="pi pi-sign-out" class="p-button-rounded p-button-text" @click="disconnect()"/>
   </div>
 </template>
 
@@ -26,12 +26,19 @@ export default {
     const {isUserDev} = authStore
     console.log("isUserDev", isUserDev);
     return{
+      authStore,
       isUserDev,
       userNom,
       userPrenom,
       userNoisettes
     }
   },
+  methods :{
+    disconnect(){
+      this.authStore.deconnexion();
+      this.$router.push('/auth');
+    }
+  }
 }
 </script>
 
