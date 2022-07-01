@@ -1,20 +1,29 @@
 <template>
   <div id="app">
-    <HeadBar v-if="showHeadbar" id="headbar"/>
+    <HeadBar v-if="isAuth" id="headbar"/>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 import HeadBar from "@/components/HeadBar/HeadBar";
+import {useAuthStore} from "@/store/authStore";
+import {storeToRefs} from "pinia";
+
 export default {
   name: 'App',
   components: {
     HeadBar
   },
+  setup() {
+    const authStore = useAuthStore();
+    const { isAuth } = storeToRefs(authStore);
+    return{
+      isAuth
+    }
+  },
   data(){
     return {
-      showHeadbar : true,
     }
   }
 }

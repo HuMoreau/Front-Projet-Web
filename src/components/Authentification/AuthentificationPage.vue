@@ -25,19 +25,71 @@
 </template>
 
 <script>
+import {useAuthStore} from "@/store/authStore";
+
 export default {
   name: "AuthentificationPage",
+  setup() {
+    const authStore = useAuthStore();
+    return{authStore}
+  },
   data(){
     return {
       submitted : false,
       email : null,
       mdp : null,
       errorMessage : null,
+      users : [
+        {
+          id : 1,
+          type : 'DEV',
+          prenom : 'Anthony',
+          nom : 'Paboeuf',
+          noisettes : 666,
+          email : "mail@dev.com",
+          password : 'password'
+        },
+        {
+          id : 2,
+          type : 'RAP',
+          prenom : 'Lucie',
+          nom : 'Tan',
+          noisettes : 0,
+          email : "mail@rap.com",
+          password : 'admin'
+        },
+      ]
     }
   },
   methods : {
     checkForAuth(){
-      this.errorMessage = "Il y a une erreur palsanbleu !"
+      let user = this.findUserFromEmail(); //ICI C'EST LA REQUETE API
+      if(!user){
+        this.errorMessage = "Aucun utilisateur ayant cet email n'a été trouvé";
+        return;
+      }
+      if(this.isPasswordIncorrect(user.password)){
+        this.errorMessage = "Mauvais mot de passe";
+        return;
+      }
+      this.errorMessage = null;
+      console.log(user);
+      this.authStore.connexion(user);
+      this.$router.push("/");
+    },
+    findUserFromEmail(){
+      return this.users.find(user => user.email === this.email) === undefined
+          ? null : this.users.find(user => user.email === this.email) ;
+    },
+    isPasswordIncorrect(userPassword){
+      return userPassword !== this.mdp;
+    },
+    goTo(link, params){
+      if(params){
+        this.$router.push({path: link, query: params});
+        return;
+      }
+      this.$router.push(link);
     }
   }
 }
