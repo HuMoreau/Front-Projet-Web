@@ -50,6 +50,7 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import {required, helpers} from '@vuelidate/validators'
+import {apiService} from "@/main";
 
 export default {
   name: "ProjetInfo",
@@ -60,20 +61,21 @@ export default {
   },
   created() {
     if(this.$route.query.mod){
-      console.log(this.$route.query.mod)
       this.modification = (this.$route.query.mod === 'true');
     }
   },
   mounted() {
+    // api
+    this.populate();
   },
   data(){
     return {
       projet : {
-        id: 1,
-        nom : "Nom du projet",
-        nombreTicketsUrgents : 5,
-        nombreTicketsImportants : 3,
-        nombreTicketsMineurs : 12
+        id: null,
+        nom : "",
+        nombreTicketsUrgents : 0,
+        nombreTicketsImportants : 0,
+        nombreTicketsMineurs : 0
       },
       chartOptions: {
         plugins : {
@@ -85,11 +87,11 @@ export default {
       modification : false,
       submitted : false,
       lineBasicData: {
-        labels: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet'],
+        labels: [],
         datasets: [
           {
             label: 'Nombre de tickets',
-            data: [14, 23, 29, 26, 12, 9, 20],
+            data: [],
             fill: true,
             borderColor: '#42A5F5',
             tension: .4,
@@ -100,10 +102,41 @@ export default {
     }
   },
   methods: {
+    populate() {
+      apiService.get('projet/' + this.$route.params.id).then(response => {
+        console.log(response.data);
+        this.projet = response.data;
+      }).catch(error => {
+        console.log(error);
+      });
+
+      apiService.get('utils/nbTickets/ALL/6/projet/' + this.$route.params.id).then(response => {
+        let data = response.data;
+        console.log(response.data);
+        for (let i = 0; i < data.months.length; i++) {
+          this.lineBasicData.labels.push(data.months[i].month);
+          this.lineBasicData.datasets[0].data.push(data.months[i].URGENT + data.months[i].IMPORTANT + data.months[i].MINEUR);
+          console.log(this.lineBasicData.datasets[0].data[i]);
+        }
+
+
+      }).catch(error => {
+        console.log(error);
+      });
+    },
     submitModification(invalid){
       this.submitted = invalid;
       if(!invalid){
         this.v$.$reset();
+
+        // api call to create client
+        // if success, redirect to client list
+        // if error, display error message
+        apiService.put('/projet', this.projet).then(() => {
+          this.$router.push('/projets');
+        }).catch(error => {
+          console.log(error);
+        });
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){

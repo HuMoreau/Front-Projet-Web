@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import {apiService} from "@/main";
+
 export default {
   name: "TicketDeleteModal",
   props: {
@@ -28,7 +30,13 @@ export default {
   },
   methods: {
     deleteTicket(){
-      this.$emit('closeMe');
+      // api call to delete client
+      apiService.delete("ticket/" + this.ticketToDisplay.id).catch(error => {
+        console.log(error);
+        this.$emit('closeMe', false);
+      }).finally(() => {
+        this.$emit('closeMe', true);
+      });
     },
     abortSuppression(){
       this.$emit('closeMe');

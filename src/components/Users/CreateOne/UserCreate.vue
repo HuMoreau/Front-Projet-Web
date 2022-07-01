@@ -46,9 +46,9 @@
           </div>
           <div class="col-12  flex flex-column">
             <label>Contact</label>
-            <InputText v-model="v$.utilisateur.mail.$model"
-                       :class="{'p-invalid': v$.utilisateur.mail.$invalid && submitted}"></InputText>
-            <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('mail', v$.$errors)" :key="error.$uid"
+            <InputText v-model="v$.utilisateur.email.$model"
+                       :class="{'p-invalid': v$.utilisateur.email.$invalid && submitted}"></InputText>
+            <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('email', v$.$errors)" :key="error.$uid"
                    class="p-error">{{error.$message}}</small>
           </div>
         </div>
@@ -78,6 +78,7 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import {required, email, alpha, helpers} from '@vuelidate/validators'
+import {apiService} from "@/main";
 export default {
   name: "UserCreate",
   setup () {
@@ -85,7 +86,6 @@ export default {
   },
   created() {
     if(this.$route.query.mod){
-      console.log(this.$route.query.mod)
       this.modification = (this.$route.query.mod === 'true');
     }
   },
@@ -97,7 +97,7 @@ export default {
         nom : null,
         prenom : null,
         profilePicture : null,
-        mail : null,
+        email : null,
         noisettes : null
       },
       typeOptions: [
@@ -111,6 +111,30 @@ export default {
       this.submitted = invalid;
       if(!invalid){
         this.v$.$reset();
+
+        // api call to create client
+        // if success, redirect to client list
+        // if error, display error message
+        let queryURL = "";
+        let type = this.utilisateur.type.value;
+        switch (type) {
+          case 'DEV':
+            queryURL = 'developpeur/';
+            break;
+          case 'RAP':
+            queryURL = 'rapporteur/';
+            break;
+
+          default: return;
+        }
+
+        this.utilisateur.type = type;
+
+        apiService.post(queryURL, this.utilisateur).then(() => {
+          this.$router.push('/users');
+        }).catch(error => {
+          console.log(error);
+        });
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){
@@ -169,9 +193,9 @@ export default {
           required : helpers.withMessage("Ce champs ne peut pas être vide !", required),
           alpha : helpers.withMessage("Ce champs ne peut être constitué que de caractères alphabétiques", alpha),
         },
-        mail : {
+        email : {
           required : helpers.withMessage("Ce champs ne peut pas être vide !", required),
-          email : helpers.withMessage("Ce champs doit contenir une adresse mail valide", email)
+          email : helpers.withMessage("Ce champs doit contenir une adresse email valide", email)
         }
       }
     }

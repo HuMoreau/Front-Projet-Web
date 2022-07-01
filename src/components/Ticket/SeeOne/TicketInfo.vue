@@ -218,6 +218,7 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import {required, helpers, requiredIf, maxLength} from '@vuelidate/validators'
+import {apiService} from "@/main";
 export default {
   name: "TicketInfo",
   setup () {
@@ -236,32 +237,17 @@ export default {
       descriptionMaxLength : 500,
       ticket: {
         id: 1,
-        developpeur: {
-          nom: "Armand",
-          prenom: "Louison",
-          id: 1
-        },
-        rapporteur: {
-          nom: "Conchon",
-          prenom: "Guillaume",
-          id: 1
-        },
-        nom:'Ça marche po',
-        dateStart:'05-16-2022',
+        developpeur: null,
+        rapporteur: null,
+        nom:" ",
+        dateStart: 1,
         etatAvancement: 'EN_COURS',
         importance: 'HIGH',
-        description : "C'est un désastre le projet ne fonctionne plus, et l'unique disque dur sur lequel était le code est tombé dans la mare aux canards. Les serveurs ont cramés parce que Pierrot à oublié des tranches de salami dans la ventilation. La deadline est pour ce soir et le stagiaire est parti hier (comme ma femme). Il faut que je me dépêche d'apprendre le C++ sur Open Classroom ! :)",
-        projet: {
-          nom: "Projet 1",
-          id: 1
-        },
-        client: {
-          nom: "Lumineau",
-          prenom: "Théophane",
-          id: 1
-        },
-        dateAssign : '06-17-2022',
-        dateEnd : null,
+        description : " ",
+        projet: null,
+        client: null,
+        dateAssign : 1,
+        dateEnd : 1,
       },
       avancementList : ['A_FAIRE', 'EN_COURS', 'FINI'],
       avancementValueList : [
@@ -269,43 +255,66 @@ export default {
         {value : 'EN_COURS', name : 'En cours'},
         {value : 'FINI', name : 'Fini'},
       ],
-      importanceList : ['HIGH', 'MEDIUM', 'LOW'],
+      importanceList : ['URGENT', 'IMPORTANT', 'MINEUR'],
       importanceValueList : [
-        {value : 'HIGH', name : 'Urgent'},
-        {value : 'MEDIUM', name : 'Important'},
-        {value : 'LOW', name : 'Mineur'},
+        {value : 'URGENT', name : 'Urgent'},
+        {value : 'IMPORTANT', name : 'Important'},
+        {value : 'MINEUR', name : 'Mineur'},
       ],
-      projetsList : [
-        {id : 1, nom : 'Projet 1'},
-        {id : 2, nom : 'Projet 2'},
-        {id : 3, nom : 'Projet 3'},
-        {id : 4, nom : 'Projet 4'},
-      ],
-      clientsList : [
-        {id : 1, prenom : "Théophane", nom : 'Lumineau'},
-        {id : 2, prenom : 'Aurélien', nom : 'Avite'},
-        {id : 3, prenom : 'Virgile', nom : 'Armand'},
-        {id : 4, prenom : 'Nathan', nom : 'Barre'},
-      ],
-      rapporteursList : [
-        {id : 1, prenom : 'Guillaume', nom : 'Conchon'},
-        {id : 2, prenom : 'Thibaut', nom : 'Goldsborough'},
-        {id : 3, prenom : 'Guillaume', nom : 'Fustaillon'},
-        {id : 4, prenom : 'Théo', nom : 'Coucharierre'},
-      ],
-      developpeursList : [
-        {id : 1, prenom : 'Louison', nom : 'Armand'},
-        {id : 2, prenom : 'Sebastien', nom : 'Agnez'},
-        {id : 3, prenom : 'Guillaume', nom : 'Conchon'},
-        {id : 4, prenom : 'Flavien', nom : 'Perineau'},
-      ],
+      projetsList : [],
+      clientsList : [],
+      rapporteursList : [],
+      developpeursList : [],
     }
   },
+  mounted() {
+    // api
+    this.populate();
+  },
   methods: {
+    populate() {
+      apiService.get('projet').then(response => {
+        this.projetsList = response.data;
+      });
+      apiService.get('client').then(response => {
+        this.clientsList = response.data;
+      });
+      apiService.get('rapporteur').then(response => {
+        this.rapporteursList = response.data;
+      });
+      apiService.get('developpeur').then(response => {
+        this.developpeursList = response.data;
+      });
+
+      apiService.get('ticket/' + this.$route.params.id).then(response => {
+        this.ticket = response.data;
+      }).catch(error => {
+        console.log(error);
+      });
+    },
     submitModification(invalid){
       this.submitted = invalid;
       if(!invalid){
         this.v$.$reset();
+
+        let body = {
+          idProjet: this.ticket.projet.id,
+          idClient: this.ticket.client.id,
+          idRapporteur: this.ticket.rapporteur.id,
+          idDev: this.ticket.developpeur ? this.ticket.developpeur.id : null,
+          nom: this.ticket.nom,
+          dateStart: this.ticket.dateStart,
+          dateAssign: this.ticket.dateAssign,
+          dateEnd: this.ticket.dateEnd,
+          etatAvancement: this.ticket.etatAvancement,
+          importance: this.ticket.importance,
+          description: this.ticket.description,
+        };
+
+        // sending request
+        apiService.put('ticket', body).then(() => {
+          this.$router.push('/tickets');
+        });
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){

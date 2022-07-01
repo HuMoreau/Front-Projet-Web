@@ -27,7 +27,7 @@
     </div>
 
     <!--  Modal de suppression  -->
-    <UserDeleteModal @closeMe="closeDeleteModal" :displayed="isDeletionModalDisplayed" :user-to-display="userToDelete"/>
+    <UserDeleteModal @closeMe="closeDeleteModal($event)" :displayed="isDeletionModalDisplayed" :user-to-display="userToDelete"/>
   </div>
 </template>
 
@@ -68,7 +68,10 @@ export default {
       this.userToDelete = event;
       this.isDeletionModalDisplayed = true;
     },
-    closeDeleteModal(){
+    closeDeleteModal(isDeleted){
+      if (isDeleted) {
+        this.populate();
+      }
       this.userToDelete = null;
       this.isDeletionModalDisplayed = false;
     },

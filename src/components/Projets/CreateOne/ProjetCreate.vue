@@ -26,6 +26,7 @@
 <script>
 import useVuelidate from '@vuelidate/core'
 import {required, helpers} from '@vuelidate/validators'
+import {apiService} from "@/main";
 
 export default {
   name: "ProjetCreate",
@@ -37,11 +38,7 @@ export default {
   data(){
     return {
       projet : {
-        id: null,
-        nom : null,
-        nombreTicketsUrgents : 0,
-        nombreTicketsImportants : 0,
-        nombreTicketsMineurs : 0
+        nom : null
       },
       submitted : false,
     }
@@ -51,6 +48,15 @@ export default {
       this.submitted = invalid;
       if(!invalid){
         this.v$.$reset();
+
+        // api call to create client
+        // if success, redirect to client list
+        // if error, display error message
+        apiService.post('/projet', this.projet).then(() => {
+          this.$router.push('/projets');
+        }).catch(error => {
+          console.log(error);
+        });
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){

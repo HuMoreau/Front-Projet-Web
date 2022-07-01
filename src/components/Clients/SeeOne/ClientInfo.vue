@@ -79,17 +79,8 @@ export default {
     return { v$: useVuelidate() }
   },
   mounted() {
-    apiService.get('client/' + this.$route.params.id).then(response => {
-      this.client = response.data;
-    }).catch(error => {
-      console.log(error);
-    });
-
-    apiService.get('utils/enterprises').then(response => {
-      this.entreprises = response.data;
-    }).catch(error => {
-      console.log(error);
-    });
+    // api
+    this.populate();
   },
   created() {
     if(this.$route.query.mod){
@@ -113,6 +104,19 @@ export default {
     }
   },
   methods: {
+    populate() {
+      apiService.get('client/' + this.$route.params.id).then(response => {
+        this.client = response.data;
+      }).catch(error => {
+        console.log(error);
+      });
+
+      apiService.get('utils/enterprises').then(response => {
+        this.entreprises = response.data;
+      }).catch(error => {
+        console.log(error);
+      });
+    },
     submitModification(invalid){
       this.submitted = invalid;
       if(!invalid){

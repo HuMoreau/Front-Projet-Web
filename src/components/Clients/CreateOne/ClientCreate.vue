@@ -83,7 +83,6 @@ export default {
   },
   created() {
     if(this.$route.query.mod){
-      console.log(this.$route.query.mod)
       this.modification = (this.$route.query.mod === 'true');
     }
   },

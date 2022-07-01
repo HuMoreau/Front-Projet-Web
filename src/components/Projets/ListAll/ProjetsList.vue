@@ -39,13 +39,14 @@
     </div>
 
     <!--  Modal de suppression  -->
-    <ProjetDeleteModal @closeMe="closeDeleteModal" :displayed="isDeletionModalDisplayed" :projet-to-display="projetToDelete"/>
+    <ProjetDeleteModal @closeMe="closeDeleteModal($event)" :displayed="isDeletionModalDisplayed" :projet-to-display="projetToDelete"/>
   </div>
 </template>
 
 <script>
 import VisuelProjet from "@/components/Projets/ListAll/VisuelProjet";
 import ProjetDeleteModal from "@/components/Projets/DeleteOne/ProjetDeleteModal";
+import {apiService} from "@/main";
 export default {
   name: "ProjetsList",
   components: {ProjetDeleteModal, VisuelProjet},
@@ -59,21 +60,27 @@ export default {
         {value : "nbTicketsCroissants", name : "Nombre de ticket", icon : "pi pi-sort-numeric-down"},
         {value : "nbTicketsDecroissants", name : "Nombre de tickets", icon : "pi pi-sort-numeric-up"}
       ],
-      projets : [
-        {id: 1, nom:'GSM Tracker', nombreTicketsUrgents : 5, nombreTicketsImportants : 3, nombreTicketsMineurs : 12},
-        {id: 2, nom:'Disquette 2000', nombreTicketsUrgents : 2, nombreTicketsImportants : 8, nombreTicketsMineurs : 4},
-        {id: 3, nom:'Megabit Ultra', nombreTicketsUrgents : 3, nombreTicketsImportants : 5, nombreTicketsMineurs : 5},
-        {id: 4, nom:'Firewall Shadow Hacker', nombreTicketsUrgents : 0, nombreTicketsImportants : 2, nombreTicketsMineurs : 1},
-        {id: 5, nom:'HDD Booster', nombreTicketsUrgents : 6, nombreTicketsImportants : 14, nombreTicketsMineurs : 21},
-      ]
+      projets : []
     }
   },
+  mounted() {
+    this.populate();
+  },
   methods: {
+    populate() {
+      // call api to get all clients
+      apiService.get("/projet").then(response => {
+        this.projets = response.data;
+      });
+    },
     deleteProjet(event){
       this.projetToDelete = event;
       this.isDeletionModalDisplayed = true;
     },
-    closeDeleteModal(){
+    closeDeleteModal(isDeleted){
+      if (isDeleted) {
+        this.populate();
+      }
       this.projetToDelete = null;
       this.isDeletionModalDisplayed = false;
     },
