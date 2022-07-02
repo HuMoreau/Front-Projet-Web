@@ -297,6 +297,12 @@ export default {
       if(!invalid){
         this.v$.$reset();
 
+        const date = new Date();
+
+        const dateActuelle = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate() + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds();
+
+        if (this.ticket.etatAvancement === 'FINI') this.ticket.dateEnd = dateActuelle;
+
         let body = {
           idProjet: this.ticket.projet.id,
           idClient: this.ticket.client.id,

@@ -3,8 +3,6 @@
     <div class="flex justify-content-center align-items-center mr-5">
       <div>
         <label id="nomProjet">{{this.projetToDisplay.nom}}</label>
-        <label> - Fin : </label>
-        <label id="dateDeFin">{{this.projetToDisplay.date}}</label>
       </div>
     </div>
     <div class="flex flex-column justify-content-center align-items-center mr-2">
@@ -20,7 +18,7 @@
       <label>{{this.projetToDisplay.nombreTicketsMineurs}}</label>
     </div>
     <div id="go_to_button">
-      <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-sm p-button-text" />
+      <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-sm p-button-text" @click="goTo(`/projets/${projetToDisplay.id}`, {mod : true})"/>
     </div>
   </div>
 </template>
@@ -30,6 +28,15 @@ export default {
   name: "VisuelDisplayerProjet",
   props: {
     projetToDisplay : Object
+  },
+  methods: {
+    goTo(link, params){
+      if(params){
+        this.$router.push({path: link, query: params});
+        return;
+      }
+      this.$router.push(link);
+    }
   }
 }
 </script>

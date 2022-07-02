@@ -282,6 +282,8 @@ export default {
 
         if (this.ticket.developpeur) this.ticket.dateAssign = dateActuelle;
 
+        if (this.ticket.etatAvancement === 'FINI') this.ticket.dateEnd = dateActuelle;
+
         let body = {
           idProjet: this.ticket.projet.id,
           idClient: this.ticket.client.id,
@@ -289,6 +291,7 @@ export default {
           idDev: this.ticket.developpeur ? this.ticket.developpeur.id : null,
           nom: this.ticket.nom,
           dateStart: dateActuelle,
+          dateEnd: this.ticket.dateEnd,
           etatAvancement: this.ticket.etatAvancement,
           importance: this.ticket.importance,
           description: this.ticket.description,
