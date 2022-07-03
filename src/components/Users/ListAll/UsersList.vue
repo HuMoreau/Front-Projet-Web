@@ -14,14 +14,15 @@
           <InputText placeholder="Rechercher" type="text" class="ml-auto" v-model="recherche" :disabled="!utilisateurs"/>
         </div>
       </div>
-      <div v-if="utilisateurs" class="p-panel-content no-padding max-min-h-90vh">
+      <div v-if="utilisateurs.length > 0" class="p-panel-content no-padding max-min-h-90vh">
         <VisuelUser v-for="utilisateur in this.utilisateursToDisplay" :key="utilisateur.id + '-' + utilisateur.type"
                     :user-to-display="utilisateur" @deleteMe="deleteUser($event)"/>
       </div>
       <div v-else class="p-panel-content no-padding border-bottom">
         <div class="flex flex-column justify-content-center align-items-center p-3">
           <label class="mb-2">Il n'y a aucun utilisateur ! (Mais comment vous êtes-vous connecté ?)</label>
-          <PrimeButton label="CRÉER UTILISATEUR" class="p-button-rounded" icon="pi pi-chevron-right" iconPos="right"/>
+          <PrimeButton label="CRÉER UTILISATEUR" class="p-button-rounded" icon="pi pi-chevron-right" iconPos="right"
+          @click="goTo('users/new')"/>
         </div>
       </div>
     </div>

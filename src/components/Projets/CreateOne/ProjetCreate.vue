@@ -3,7 +3,7 @@
     <div class="p-panel-header flex align-items-center">
       <PrimeButton icon="pi pi-chevron-left" class="p-button-rounded p-button-lg  p-button-secondary p-button-text mr-3"
                    @click="goTo('/projets')"/>
-      <label class="p-panel-title mr-2">Infos - {{projet.nom}}</label>
+      <label class="p-panel-title mr-2">Nouveau projet</label>
       <div class="inline-flex align-items-center ml-auto">
         <PrimeButton icon="pi pi-save" class="p-button-rounded p-button-lg p-button-text"
                      :disabled="!v$.$anyDirty" @click="submitModification(v$.$invalid)"/>

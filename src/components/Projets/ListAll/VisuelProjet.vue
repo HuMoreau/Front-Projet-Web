@@ -4,7 +4,8 @@
     <PrimeChart type="pie" :data="chartData" :options="chartOptions" class="inline-pie-chart" :height="50"
                 :width="50"/>
     <div id="go_to_buttons">
-      <PrimeButton icon="pi pi-ticket" class="p-button-rounded p-button-secondary p-button-sm p-button-text"/>
+      <PrimeButton icon="pi pi-ticket" class="p-button-rounded p-button-secondary p-button-sm p-button-text"
+                   @click="goTo(`/tickets/new`, {projet : projetToDisplay.id})"/>
       <PrimeButton icon="pi pi-pencil" class="p-button-rounded p-button-secondary p-button-sm p-button-text"
                    @click="goTo(`/projets/${projetToDisplay.id}`, {mod : true})"/>
       <PrimeButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm p-button-text"

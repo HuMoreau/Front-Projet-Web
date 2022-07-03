@@ -34,5 +34,8 @@ export const useAuthStore = defineStore("auth", {
             this.userPrenom = user.prenom;
             this.userNoisettes = user.noisettes;
         }
+    },
+    persist: {
+        enabled: true
     }
 } )

@@ -127,12 +127,12 @@
                      class="p-button-rounded p-button-danger p-button-text mr-2"
                      @click="resetFilters()"/>
       </div>
-      <div v-if="tickets && ticketsToDisplay" class="p-panel-content no-padding max-min-h-90vh">
+      <div v-if="tickets.length > 0 && ticketsToDisplay" class="p-panel-content no-padding max-min-h-90vh">
         <VisuelTicket v-for="ticket in this.ticketsToDisplay" :key="ticket.id"
                       :display-description="isDescriptionDisplayed"
                       :ticket-to-display="ticket" @deleteMe="deleteTicket($event)"/>
       </div>
-      <div v-else-if="tickets" class="p-panel-content no-padding border-bottom">
+      <div v-else-if="tickets.length > 0" class="p-panel-content no-padding border-bottom">
         <div class="flex flex-column justify-content-center align-items-center p-3">
           <label class="mb-2">Aucun ticket ne correspond à vos critères</label>
         </div>
@@ -140,7 +140,8 @@
       <div v-else class="p-panel-content no-padding border-bottom">
         <div class="flex flex-column justify-content-center align-items-center p-3">
           <label class="mb-2">Il n'y a aucun ticket ! (Mais vous pouvez en créer un)</label>
-          <PrimeButton label="CRÉER TICKET" class="p-button-rounded" icon="pi pi-chevron-right" iconPos="right"/>
+          <PrimeButton label="CRÉER TICKET" class="p-button-rounded" icon="pi pi-chevron-right" iconPos="right"
+          @click="goTo('tickets/new')"/>
         </div>
       </div>
     </div>

@@ -11,14 +11,15 @@
           <InputText placeholder="Rechercher" type="text" class="ml-auto" v-model="recherche" :disabled="!clients"/>
         </div>
       </div>
-      <div v-if="clients" class="p-panel-content no-padding max-min-h-90vh">
+      <div v-if="clients.length > 0" class="p-panel-content no-padding max-min-h-90vh">
         <VisuelClient v-for="client in this.clientsToDisplay" :key="client.id"
                     :client-to-display="client" @deleteMe="deleteClient($event)"/>
       </div>
       <div v-else class="p-panel-content no-padding border-bottom">
         <div class="flex flex-column justify-content-center align-items-center p-3">
           <label class="mb-2">Il n'y a aucun client</label>
-          <PrimeButton label="CRÉER CLIENT" class="p-button-rounded" icon="pi pi-chevron-right" iconPos="right"/>
+          <PrimeButton label="CRÉER CLIENT" class="p-button-rounded" icon="pi pi-chevron-right" iconPos="right"
+          @click="goTo('clients/new')"/>
         </div>
       </div>
     </div>

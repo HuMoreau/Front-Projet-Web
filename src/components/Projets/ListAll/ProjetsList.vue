@@ -26,14 +26,15 @@
           <InputText placeholder="Rechercher" type="text" class="ml-auto" v-model="recherche" :disabled="!projets"/>
         </div>
       </div>
-      <div v-if="projets" class="p-panel-content no-padding max-min-h-90vh">
+      <div v-if="projets.length > 0" class="p-panel-content no-padding max-min-h-90vh">
         <VisuelProjet v-for="projet in this.projetsToDisplay" :key="projet.id"
                       :projet-to-display="projet" @deleteMe="deleteProjet($event)"/>
       </div>
       <div v-else class="p-panel-content no-padding border-bottom">
         <div class="flex flex-column justify-content-center align-items-center p-3">
           <label class="mb-2">Il n'y a aucun projet.</label>
-          <PrimeButton label="CRÉER PROJET" class="p-button-rounded" icon="pi pi-chevron-right" iconPos="right"/>
+          <PrimeButton label="CRÉER PROJET" class="p-button-rounded" icon="pi pi-chevron-right" iconPos="right"
+          @click="goTo('projets/new')"/>
         </div>
       </div>
     </div>

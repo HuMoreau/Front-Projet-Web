@@ -3,6 +3,7 @@ import App from './App.vue'
 import VueRouter from 'vue-router';
 import routes from './router'
 import { createPinia, PiniaVuePlugin } from 'pinia';
+import piniaPersist from 'pinia-plugin-persist';
 import axios from 'axios';
 import PrimeVue from 'primevue/config'
 import Menubar from "primevue/menubar";
@@ -52,11 +53,11 @@ const router = new VueRouter({
   mode: 'history',
 })
 
-
 const pinia = createPinia()
+pinia.use(piniaPersist);
 
 export const apiService = axios.create({
-  baseURL: 'http://localhost:9090/api/',
+  baseURL: 'http.://localhost:9090/api/',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json'
