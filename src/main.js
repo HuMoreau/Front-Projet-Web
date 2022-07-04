@@ -57,17 +57,18 @@ const pinia = createPinia()
 pinia.use(piniaPersist);
 
 export const apiService = axios.create({
-  baseURL: 'http.://localhost:9090/api/',
+  baseURL: 'http://localhost:9090/api/',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json'
   }
 })
 
-let isAuth = false;
+let isAuth = window.localStorage.getItem("user") ?
+    JSON.parse(window.localStorage.getItem("user")).isAuth : false;
 
 router.beforeEach( async (to, from, next) => {
-  console.log(isAuth);
+  console.log("isAuth", isAuth);
   if(!isAuth && to.name !== 'Authentication'){
     router.push('/auth');
   }
