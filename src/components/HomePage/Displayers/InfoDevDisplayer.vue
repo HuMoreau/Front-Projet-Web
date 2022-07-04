@@ -19,56 +19,47 @@
 </template>
 
 <script>
+import {apiService} from "@/main";
+import {useAuthStore} from "@/store/authStore";
+import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+
 export default {
   name: "InfoDev",
+  setup() {
+    const authStore = useAuthStore();
+    const {userId} = storeToRefs(authStore);
+    return{
+      userId
+    }
+  },
   data(){
     return {
-      ticketsParJour : 3.46,
-      tempsDeResolutionTicketMoyen : '1h13',
-      projetFavori : "Projet 2",
+      ticketsParJour : 0,
+      tempsDeResolutionTicketMoyen : "",
+      projetFavori : "",
       classementNoisette : "3",
       stackedData: {
-        labels: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet'],
-        datasets: [{
-          type: 'bar',
-          label: 'Mineurs',
-          backgroundColor: '#c8e6c9',
-          data: [
-            23,
-            31,
-            12,
-            28,
-            17,
-            43,
-            11
-          ]
-        }, {
-          type: 'bar',
-          label: 'Importants',
-          backgroundColor: '#ffd8b2',
-          data: [
-            19,
-            14,
-            8,
-            23,
-            34,
-            12,
-            22
-          ]
-        }, {
-          type: 'bar',
-          label: 'Urgents',
-          backgroundColor: '#FFCDD2',
-          data: [
-            11,
-            9,
-            8,
-            13,
-            18,
-            7,
-            4
-          ]
-        }]
+        labels: [],
+        datasets: [
+          {
+            type: 'bar',
+            label: 'Mineurs',
+            backgroundColor: '#c8e6c9',
+            data: []
+          },
+          {
+            type: 'bar',
+            label: 'Importants',
+            backgroundColor: '#ffd8b2',
+            data: []
+          },
+          {
+            type: 'bar',
+            label: 'Urgents',
+            backgroundColor: '#FFCDD2',
+            data: []
+          }
+        ]
       },
       stackedOptions: {
         plugins: {
@@ -103,6 +94,84 @@ export default {
           }
         }
       }
+    }
+  },
+  mounted() {
+    // api
+    this.populate();
+  },
+  methods: {
+    goTo(link, params){
+      if(params){
+        this.$router.push({path: link, query: params});
+        return;
+      }
+      this.$router.push(link);
+    },
+    populate: function () {
+      // moyenne tickets par jour
+      apiService.get("utils/AverageTicketsPerDay/FINI/dev/" + this.userId).then(response => {
+        this.ticketsParJour = response.data.moyenne;
+      });
+
+      // moyenne temps de résolution ticket
+      apiService.get("utils/AverageTimeSpendPerTicket/" + this.userId).then(response => {
+        this.tempsDeResolutionTicketMoyen = response.data.moyenne;
+      });
+
+      // projet favori
+      apiService.get("developpeur/TicketsDonePerProject/" + this.userId).then(response => {
+        let projectName = "";
+        let nbProjectMax = 0;
+
+        for (let i = 0; i < response.data.length; i++) {
+          const projet = response.data[i];
+          // take the project with the most nbTicketFini
+          if (nbProjectMax < projet.nbTicketFini) {
+            nbProjectMax = projet.nbTicketFini;
+            projectName = projet.nom;
+          }
+        }
+        this.projetFavori = projectName;
+      });
+
+      // classement noisette
+      apiService.get("developpeur").then(response => {
+
+        // sort developpeurs list by noisette
+        response.data.sort((a, b) => a.noisette - b.noisette);
+
+        // get the classement of the current user in the list
+        for (let i = 0; i < response.data.length; i++) {
+          const developpeur = response.data[i];
+          if (developpeur.id === this.userId) {
+            this.classementNoisette = i + 1;
+            break;
+          }
+        }
+
+      });
+
+      // bar chart
+      apiService.get("utils/nbTickets/ALL/6/dev/" + this.userId).then(response => {
+        let labels = [];
+        let data = {
+          MINEUR: [],
+          IMPORTANT: [],
+          URGENT: []
+        };
+        for (let i = 0; i < response.data.months.length; i++) {
+          const month = response.data.months[i];
+          labels.push(month.month);
+          data.URGENT.push(month.URGENT);
+          data.IMPORTANT.push(month.IMPORTANT);
+          data.MINEUR.push(month.MINEUR);
+        }
+        this.stackedData.labels = labels;
+        this.stackedData.datasets[0].data = data.MINEUR;
+        this.stackedData.datasets[1].data = data.IMPORTANT;
+        this.stackedData.datasets[2].data = data.URGENT;
+      });
     }
   }
 }

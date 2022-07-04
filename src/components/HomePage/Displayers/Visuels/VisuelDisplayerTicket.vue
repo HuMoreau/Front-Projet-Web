@@ -2,18 +2,18 @@
   <div class="ticket flex" >
     <div class="flex flex-column justify-content-center">
       <div class="mb-2">
-        <label id="nomTicket">{{this.ticketToDisplay.titre}}</label>
+        <label id="nomTicket">{{this.ticketToDisplay.nom}}</label>
         <label> - </label>
-        <small id="dateTicket">{{this.ticketToDisplay.date}}</small>
+        <small id="dateTicket">{{this.ticketToDisplay.dateStart}}</small>
         <label> - </label>
-        <small id="projetTicket">{{this.ticketToDisplay.projet}}</small>
+        <small id="projetTicket">{{this.ticketToDisplay.projet.nom}}</small>
         <label> - </label>
-        <small id="prioriteTicket" :class="'importance-badge ' + this.ticketToDisplay.priorite">{{this.ticketToDisplay.priorite}}</small>
+        <small id="prioriteTicket" :class="'importance-badge ' + this.ticketToDisplay.importance.toLowerCase()">{{this.ticketToDisplay.importance}}</small>
       </div>
       <small id="descriptionTicket">{{this.ticketToDisplay.description}}</small>
     </div>
     <div id="go_to_button">
-      <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-sm p-button-text" />
+      <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-sm p-button-text" @click="goTo(`/tickets/${ticketToDisplay.id}`, {mod : true})"/>
     </div>
   </div>
 </template>
@@ -23,6 +23,15 @@ export default {
   name: "VisuelDisplayerTicket",
   props: {
     ticketToDisplay: Object
+  },
+  methods: {
+    goTo(link, params){
+      if(params){
+        this.$router.push({path: link, query: params});
+        return;
+      }
+      this.$router.push(link);
+    }
   }
 }
 </script>

@@ -7,7 +7,7 @@
       <div class="inline-flex align-items-center ml-auto">
         <div class="flex align-self-center justify-content-center">
           <PrimeButton label="Ajouter un ticket" class="p-button-outlined p-button p-button-rounded mr-3" icon="pi pi-ticket"
-                       @click="goTo('/')"/>
+                       @click="goTo('/tickets/new')"/>
         </div>
         <div class="flex flex-column align-items-center mr-2">
           <label>{{modification ? 'Modifiable' : 'Modifier'}}</label>

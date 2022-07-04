@@ -9,7 +9,7 @@
         <img alt="logo" src="./../../assets/noisette.png" height="15">
       </div>
     </div>
-    <PrimeButton icon="pi pi-cog" class="p-button-rounded p-button-secondary p-button-text" />
+    <PrimeButton icon="pi pi-cog" class="p-button-rounded p-button-secondary p-button-text" @click="goTo(`/users/${userType}/${userId}`, {mod : true})"/>
     <PrimeButton icon="pi pi-sign-out" class="p-button-rounded p-button-text" @click="disconnect()"/>
   </div>
 </template>
@@ -22,18 +22,27 @@ export default {
   name: "UserHeadbarInfo",
   setup() {
     const authStore = useAuthStore();
-    const {userNom, userPrenom, userNoisettes} = storeToRefs(authStore);
+    const {userNom, userPrenom, userNoisettes, userId, userType} = storeToRefs(authStore);
     const {isUserDev} = authStore
-    console.log("isUserDev", isUserDev);
     return{
       authStore,
       isUserDev,
       userNom,
       userPrenom,
-      userNoisettes
+      userNoisettes,
+      userId,
+      userType
     }
   },
   methods :{
+    goTo(link, params){
+
+      if(params){
+        this.$router.push({path: link, query: params});
+        return;
+      }
+      this.$router.push(link);
+    },
     disconnect(){
       this.authStore.deconnexion();
       this.$router.push('/auth');
