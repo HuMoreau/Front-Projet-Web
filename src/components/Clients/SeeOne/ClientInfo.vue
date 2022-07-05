@@ -3,7 +3,7 @@
     <div class="p-panel-header flex align-items-center">
       <PrimeButton icon="pi pi-chevron-left" class="p-button-rounded p-button-lg  p-button-secondary p-button-text mr-3"
                    @click="goTo('/clients')"/>
-      <label class="p-panel-title mr-2">Infos - {{getFirstAndLastName}} - {{$route.params.id}}</label>
+      <label class="p-panel-title mr-2">Infos - {{getFirstAndLastName}}</label>
       <div class="inline-flex align-items-center ml-auto">
         <div class="flex flex-column align-items-center mr-2">
           <label>{{modification ? 'Modifiable' : 'Modifier'}}</label>
