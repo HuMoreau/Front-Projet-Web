@@ -4,14 +4,12 @@
       <label class="p-panel-title mr-1">Stats Perso</label>
     </div>
     <div class="p-panel-content no-padding grid ml-0 mr-0 mt-0 align-items-center text-align-center">
-      <label class="font-bold col-3">Tickets/Jour</label>
-      <label class="font-bold col-3">Temps/Ticket</label>
-      <label class="font-bold col-3">Projet Favori</label>
-      <label class="font-bold col-3">Classement</label>
-      <label class="col-3">{{ticketsParJour}}</label>
-      <label class="col-3">{{tempsDeResolutionTicketMoyen}}</label>
-      <label class="col-3">{{projetFavori}}</label>
-      <label class="col-3">{{classementNoisette}}</label>
+      <label class="font-bold col-4">Tickets/Jour</label>
+      <label class="font-bold col-4">Temps/Ticket</label>
+      <label class="font-bold col-4">Projet Favori</label>
+      <label class="col-4">{{ticketsParJour}}</label>
+      <label class="col-4">{{tempsDeResolutionTicketMoyen}}</label>
+      <label class="col-4">{{projetFavori}}</label>
       <PrimeChart type="bar" class="col-12" :data="stackedData" :options="stackedOptions"/>
     </div>
   </div>
@@ -23,7 +21,7 @@ import {useAuthStore} from "@/store/authStore";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
 export default {
-  name: "InfoDev",
+  name: "InfoRap",
   setup() {
     const authStore = useAuthStore();
     const {userId} = storeToRefs(authStore);
@@ -109,7 +107,7 @@ export default {
     },
     populate: function () {
       // moyenne tickets par jour
-      apiService.get("utils/AverageTicketsPerDay/FINI/dev/" + this.userId).then(response => {
+      apiService.get("utils/AverageTicketsPerDay/FINI/rap/" + this.userId).then(response => {
         this.ticketsParJour = (Math.round(response.data.moyenne * 100) / 100).toFixed(2);
       });
 
@@ -119,7 +117,7 @@ export default {
       });
 
       // projet favori
-      apiService.get("developpeur/TicketsDonePerProject/" + this.userId).then(response => {
+      apiService.get("rapporteur/TicketsDonePerProject/" + this.userId).then(response => {
         let projectName = "";
         let nbProjectMax = 0;
 
@@ -135,15 +133,15 @@ export default {
       });
 
       // classement noisette
-      apiService.get("developpeur").then(response => {
+      apiService.get("rapporteur").then(response => {
 
-        // sort developpeurs list by noisette
+        // sort rapporteurs list by noisette
         response.data.sort((a, b) => a.noisette - b.noisette);
 
         // get the classement of the current user in the list
         for (let i = 0; i < response.data.length; i++) {
-          const developpeur = response.data[i];
-          if (developpeur.id === this.userId) {
+          const rapporteur = response.data[i];
+          if (rapporteur.id === this.userId) {
             this.classementNoisette = i + 1;
             break;
           }
@@ -152,7 +150,7 @@ export default {
       });
 
       // bar chart
-      apiService.get("utils/nbTickets/ALL/6/dev/" + this.userId).then(response => {
+      apiService.get("utils/nbTickets/ALL/6/rap/" + this.userId).then(response => {
         let labels = [];
         let data = {
           MINEUR: [],
