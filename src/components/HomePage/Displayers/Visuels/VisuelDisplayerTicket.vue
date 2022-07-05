@@ -13,7 +13,7 @@
       <small id="descriptionTicket">{{this.ticketToDisplay.description}}</small>
     </div>
     <div id="go_to_button">
-      <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-sm p-button-text" @click="goTo(`/tickets/${ticketToDisplay.id}`, {mod : true})"/>
+      <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-sm p-button-text" @click="goTo(`/tickets/${ticketToDisplay.id}`)"/>
     </div>
   </div>
 </template>

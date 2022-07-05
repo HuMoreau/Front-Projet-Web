@@ -43,6 +43,9 @@
           </div>
         </div>
       </div>
+      <div class="col-12 flex justify-content-evenly align-items-center mt-3">
+        <ProjetTicketDisplayer :tickets="tickets" id="selected_ticket_displayer"/>
+      </div>
     </div>
   </div>
 </template>
@@ -51,9 +54,11 @@
 import useVuelidate from '@vuelidate/core'
 import {required, helpers} from '@vuelidate/validators'
 import {apiService} from "@/main";
+import ProjetTicketDisplayer from "@/components/Projets/SeeOne/ProjetTicketDisplayer";
 
 export default {
   name: "ProjetInfo",
+  components: {ProjetTicketDisplayer},
   setup () {
     return {
       v$: useVuelidate(),
@@ -70,6 +75,7 @@ export default {
   },
   data(){
     return {
+      tickets: null,
       projet : {
         id: null,
         nom : "",
@@ -98,21 +104,25 @@ export default {
             backgroundColor : 'rgba(66,165,245,0.2)'
           }
         ]
-      },
+      }
     }
   },
   methods: {
     populate() {
       apiService.get('projet/' + this.$route.params.id).then(response => {
-        console.log(response.data);
         this.projet = response.data;
+      }).catch(error => {
+        console.log(error);
+      });
+
+      apiService.get('projet/AllTickets/' + this.$route.params.id).then(response => {
+        this.tickets = response.data;
       }).catch(error => {
         console.log(error);
       });
 
       apiService.get('utils/nbTickets/ALL/6/projet/' + this.$route.params.id).then(response => {
         let data = response.data;
-        console.log(response.data);
         for (let i = 0; i < data.months.length; i++) {
           this.lineBasicData.labels.push(data.months[i].month);
           this.lineBasicData.datasets[0].data.push(data.months[i].URGENT + data.months[i].IMPORTANT + data.months[i].MINEUR);

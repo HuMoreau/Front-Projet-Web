@@ -18,7 +18,7 @@
       <label>{{this.projetToDisplay.nombreTicketsMineurs}}</label>
     </div>
     <div id="go_to_button">
-      <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-sm p-button-text" @click="goTo(`/projets/${projetToDisplay.id}`, {mod : true})"/>
+      <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-sm p-button-text" @click="goTo(`/projets/${projetToDisplay.id}`)"/>
     </div>
   </div>
 </template>

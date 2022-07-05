@@ -110,7 +110,7 @@ export default {
     populate: function () {
       // moyenne tickets par jour
       apiService.get("utils/AverageTicketsPerDay/FINI/dev/" + this.userId).then(response => {
-        this.ticketsParJour = response.data.moyenne;
+        this.ticketsParJour = (Math.round(response.data.moyenne * 100) / 100).toFixed(2);
       });
 
       // moyenne temps de résolution ticket

@@ -5,7 +5,7 @@
       <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-secondary p-button-text" @click="goTo('/tickets')"/>
       <DropDown v-model="selectedSorting" :options="sortingList" optionLabel="name" class="ml-auto" placeholder="Trier par" :disabled="!tickets"/>
     </div>
-    <div v-if="tickets && tickets.length > 0" class="p-panel-content no-padding max-min-h-35vh">
+    <div v-if="tickets" class="p-panel-content no-padding max-min-h-35vh">
       <VisuelTicket v-for="ticket in this.tickets" :key="ticket.id" :ticket-to-display="ticket"/>
     </div>
     <div v-else class="p-panel-content no-padding border-bottom">
@@ -20,19 +20,10 @@
 <script>
 import VisuelTicket from "@/components/HomePage/Displayers/Visuels/VisuelDisplayerTicket";
 import {apiService} from "@/main";
-import {useAuthStore} from "@/store/authStore";
-import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
 export default {
-  name: "SelectedTicketDisplayer",
+  name: "ProjetTicketDisplayer",
   components: {VisuelTicket},
-  setup() {
-    const authStore = useAuthStore();
-    const {userId} = storeToRefs(authStore);
-    return{
-      userId
-    }
-  },
   data(){
     return {
       tickets: null,
@@ -58,14 +49,10 @@ export default {
       this.$router.push(link);
     },
     populate() {
-      apiService.get("ticket").then(response => {
-        this.tickets = [];
-        for(let i = 0; i < response.data.length; i++) {
-          let ticket = response.data[i];
-          if (ticket.developpeur.id === this.userId && ticket.etatAvancement === "EN_COURS") {
-            this.tickets.push(ticket);
-          }
-        }
+      apiService.get('projet/AllTickets/' + this.$route.params.id).then(response => {
+        this.tickets = response.data;
+      }).catch(error => {
+        console.log(error);
       });
     }
   }
