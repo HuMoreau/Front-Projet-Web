@@ -3,7 +3,7 @@
     <div class="p-panel-header flex align-items-center">
       <PrimeButton icon="pi pi-chevron-left" class="p-button-rounded p-button-lg  p-button-secondary p-button-text mr-3"
                    @click="goTo('/users')"/>
-      <label class="p-panel-title mr-2">Infos - {{getFirstAndLastName}} - {{$route.params.id}}</label>
+      <label class="p-panel-title mr-2">Infos - {{getFirstAndLastName}}</label>
       <div class="inline-flex align-items-center ml-auto">
         <div class="flex flex-column align-items-center mr-2">
           <label>{{modification ? 'Modifiable' : 'Modifier'}}</label>
@@ -29,6 +29,13 @@
                        :class="{'p-invalid': v$.utilisateur.nom.$invalid && submitted}"></InputText>
             <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('nom', v$.$errors)" :key="error.$uid" class="p-error">{{error.$message}}</small>
           </div>
+          <div v-if="this.$route.params.id == userId && this.$route.params.type == userType" class="col-12 flex flex-column">
+            <label>Mot de passe</label>
+            <PassWord v-model="v$.utilisateur.password.$model" :disabled="!modification"
+                      :class="{'p-invalid': v$.utilisateur.password.$invalid && submitted}" toggleMask></PassWord>
+            <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('password', v$.$errors)" :key="error.$uid"
+                   class="p-error">{{error.$message}}</small>
+          </div>
         </div>
         <div class="col-4 grid">
           <div class="col-12 flex flex-column">
@@ -51,15 +58,17 @@
                        :class="{'p-invalid': v$.utilisateur.email.$invalid && submitted}"></InputText>
             <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('email', v$.$errors)" :key="error.$uid" class="p-error">{{error.$message}}</small>
           </div>
+          <div v-if="this.$route.params.id == userId && this.$route.params.type == userType" class="col-12 flex flex-column">
+            <label>Confirmer mot de passe</label>
+            <PassWord v-model="v$.utilisateur.confirmPassword.$model" :disabled="!modification"
+                      :class="{'p-invalid': v$.utilisateur.confirmPassword.$invalid && submitted}" toggleMask></PassWord>
+            <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('confirmPassword', v$.$errors)" :key="error.$uid"
+                   class="p-error">{{error.$message}}</small>
+          </div>
         </div>
-        <div class="col-4 grid">
-          <div class="col-12 flex flex-column">
+        <div class="col-4 text-align-center align-self-center">
             <div class="inline-flex align-self-center align-items-center">
-              <label class="mr-2">Photo de profil</label>
-              <PrimeButton icon="pi pi-download" class="p-button-rounded p-button-sm p-button-text"
-                           :disabled="!modification"/>
-              <PrimeButton icon="pi pi-times" class="p-button-rounded p-button-danger p-button-sm p-button-text"
-                           :disabled="!this.utilisateur.profilePicture || !modification"/>
+              <label class="mr-2 mb-2">Photo de profil</label>
             </div>
             <div class="align-self-center">
               <AvatarIcon v-if="utilisateur.profilePicture"
@@ -68,7 +77,6 @@
               <AvatarIcon v-else :label="uppercaseFirstLetterName"
                           class="displayed-profil-picture" shape="circle" size="xlarge"
                           :style="'background-color:' + getColorFromUserName + ';color : #fff'"/>
-            </div>
           </div>
         </div>
       </div>
@@ -78,12 +86,20 @@
 
 <script>
 import useVuelidate from '@vuelidate/core'
-import {required, email, alpha, helpers} from '@vuelidate/validators'
+import {required, email, alpha, helpers, sameAs} from '@vuelidate/validators'
 import {apiService} from "@/main";
+import {useAuthStore} from "@/store/authStore";
+import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 export default {
   name: "UserInfo",
   setup () {
-    return { v$: useVuelidate() }
+    const authStore = useAuthStore();
+    const {userId, userType} = storeToRefs(authStore);
+    return {
+      userType,
+      userId,
+      v$: useVuelidate()
+    }
   },
   created() {
     if(this.$route.query.mod){
@@ -100,6 +116,8 @@ export default {
         prenom : "Ousseynou",
         nom : "Sakho",
         profilePicture : null,
+        password : null,
+        confirmPassword: null,
         email : 'email@email.com',
         noisettes : 16000
       },
@@ -129,6 +147,7 @@ export default {
       apiService.get(queryURL).then(response => {
         this.utilisateur = response.data;
         this.utilisateur.type = this.typeOptions.find(e => e.value === this.$route.params.type);
+        this.utilisateur.confirmPassword = this.utilisateur.password;
       }).catch(error => {
         console.log(error);
       });
@@ -212,7 +231,14 @@ export default {
         },
         email : {
           required : helpers.withMessage("Ce champs ne peut pas être vide !", required),
-          email : helpers.withMessage("Ce champs doit contenir une adresse mail valide", email)
+          email : helpers.withMessage("Ce champs doit contenir une adresse email valide", email)
+        },
+        password : {
+          required : helpers.withMessage("Ce champs ne peut pas être vide !", required),
+        },
+        confirmPassword : {
+          required : helpers.withMessage("Ce champs ne peut pas être vide !", required),
+          sameAsPassword: helpers.withMessage("Ce champs doit être identique avec password",sameAs(this.utilisateur.password)),
         }
       }
     }

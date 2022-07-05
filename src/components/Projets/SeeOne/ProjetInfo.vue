@@ -3,7 +3,7 @@
     <div class="p-panel-header flex align-items-center">
       <PrimeButton icon="pi pi-chevron-left" class="p-button-rounded p-button-lg  p-button-secondary p-button-text mr-3"
                    @click="goTo('/projets')"/>
-      <label class="p-panel-title mr-2">Infos - {{projet.nom}} - {{$route.params.id}}</label>
+      <label class="p-panel-title mr-2">Infos - {{projet.nom}}</label>
       <div class="inline-flex align-items-center ml-auto">
         <div class="flex align-self-center justify-content-center">
           <PrimeButton label="Ajouter un ticket" class="p-button-outlined p-button p-button-rounded mr-3" icon="pi pi-ticket"
