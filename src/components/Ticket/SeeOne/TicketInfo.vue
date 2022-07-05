@@ -6,15 +6,15 @@
       <label class="p-panel-title mr-5">Infos - {{ticket.nom}}</label>
       <div class="flex flex-column mr-3 align-items-center">
         <label>Création</label>
-        <label><i>{{ticket.dateStart ? ticket.dateStart : '-'}}</i></label>
+        <label><i>{{dateStartFormated}}</i></label>
       </div>
       <div class="flex flex-column mr-3 align-items-center">
         <label>Assignation</label>
-        <label><i>{{ticket.dateAssign ? ticket.dateAssign : '-'}}</i></label>
+        <label><i>{{dateAssignFormated}}</i></label>
       </div>
       <div class="flex flex-column mr-3 align-items-center">
         <label>Fermeture</label>
-        <label><i>{{ticket.dateEnd ? ticket.dateEnd : '-'}}</i></label>
+        <label><i>{{dateEndFormated}}</i></label>
       </div>
       <div class="inline-flex align-items-center ml-auto">
         <div class="flex flex-column align-items-center mr-2">
@@ -236,18 +236,18 @@ export default {
       nomMaxLength : 25,
       descriptionMaxLength : 500,
       ticket: {
-        id: 1,
+        id: null,
         developpeur: null,
         rapporteur: null,
-        nom:" ",
-        dateStart: 1,
-        etatAvancement: 'EN_COURS',
-        importance: 'HIGH',
-        description : " ",
+        nom: null,
+        dateStart: null,
+        etatAvancement: null,
+        importance: null,
+        description : null,
         projet: null,
         client: null,
-        dateAssign : 1,
-        dateEnd : 1,
+        dateAssign : null,
+        dateEnd : null,
       },
       avancementList : ['A_FAIRE', 'EN_COURS', 'FINI'],
       avancementValueList : [
@@ -273,24 +273,29 @@ export default {
   },
   methods: {
     populate() {
-      apiService.get('projet').then(response => {
+      const promise1 = apiService.get('projet').then(response => {
         this.projetsList = response.data;
       });
-      apiService.get('client').then(response => {
+      const promise2 = apiService.get('client').then(response => {
         this.clientsList = response.data;
       });
-      apiService.get('rapporteur').then(response => {
+      const promise3 = apiService.get('rapporteur').then(response => {
         this.rapporteursList = response.data;
       });
-      apiService.get('developpeur').then(response => {
+      const promise4= apiService.get('developpeur').then(response => {
         this.developpeursList = response.data;
       });
-
-      apiService.get('ticket/' + this.$route.params.id).then(response => {
+      const promise5 = apiService.get('ticket/' + this.$route.params.id).then(response => {
         this.ticket = response.data;
       }).catch(error => {
         console.log(error);
       });
+
+      Promise.all([promise1, promise2, promise3, promise4, promise5])
+          .then(() => {
+            console.log(this.ticket);
+            this.ticket.projet = this.projetsList.find(projet => projet.id == this.ticket.projet.id);
+          })
     },
     submitModification(invalid){
       this.submitted = invalid;
@@ -363,6 +368,15 @@ export default {
     },
     descriptionLength : function (){
       return this.ticket.description ? this.ticket.description.length : 0;
+    },
+    dateStartFormated : function(){
+      return this.ticket.dateStart ? new Date(this.ticket.dateStart).toLocaleDateString('fr') : '-';
+    },
+    dateAssignFormated : function(){
+      return this.ticket.dateAssign ? new Date(this.ticket.dateAssign).toLocaleDateString('fr') : '-';
+    },
+    dateEndFormated : function(){
+      return this.ticket.dateEnd ? new Date(this.ticket.dateEnd).toLocaleDateString('fr') : '-';
     }
   },
   validations () {

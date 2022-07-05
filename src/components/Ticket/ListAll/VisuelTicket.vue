@@ -28,7 +28,7 @@
       </div>
       <div class="flex flex-column align-items-center mr-3">
         <label class="mb-1"><strong>Date création</strong></label>
-        <label>{{this.ticketToDisplay.dateStart}}</label>
+        <label>{{dateStartFormated}}</label>
       </div>
       <div id="go_to_buttons">
         <PrimeButton :icon="localyDisplayDescription ? 'pi pi-minus-circle' : 'pi pi-info-circle'"
@@ -124,6 +124,9 @@ export default {
         return this.abregerNomPrenom(this.ticketToDisplay.client.prenom, this.ticketToDisplay.client.nom);
       }
       return '-';
+    },
+    dateStartFormated : function(){
+      return this.ticketToDisplay.dateStart ? new Date(this.ticketToDisplay.dateStart).toLocaleDateString('fr') : '-';
     },
   },
   watch: {

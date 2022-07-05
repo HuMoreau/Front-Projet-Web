@@ -20,11 +20,18 @@
             <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('prenom', v$.$errors)" :key="error.$uid"
                    class="p-error">{{error.$message}}</small>
           </div>
-          <div class="col-12  flex flex-column">
+          <div class="col-12 flex flex-column">
             <label>Nom</label>
             <InputText v-model="v$.utilisateur.nom.$model"
                        :class="{'p-invalid': v$.utilisateur.nom.$invalid && submitted}"></InputText>
             <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('nom', v$.$errors)" :key="error.$uid"
+                   class="p-error">{{error.$message}}</small>
+          </div>
+          <div class="col-12 flex flex-column">
+            <label>Mot de passe</label>
+            <PassWord v-model="v$.utilisateur.password.$model"
+                       :class="{'p-invalid': v$.utilisateur.password.$invalid && submitted}" toggleMask></PassWord>
+            <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('password', v$.$errors)" :key="error.$uid"
                    class="p-error">{{error.$message}}</small>
           </div>
         </div>
@@ -44,21 +51,24 @@
               </template>
             </SelectButton>
           </div>
-          <div class="col-12  flex flex-column">
+          <div class="col-12 flex flex-column">
             <label>Contact</label>
             <InputText v-model="v$.utilisateur.email.$model"
                        :class="{'p-invalid': v$.utilisateur.email.$invalid && submitted}"></InputText>
             <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('email', v$.$errors)" :key="error.$uid"
                    class="p-error">{{error.$message}}</small>
           </div>
-        </div>
-        <div class="col-4 grid">
           <div class="col-12 flex flex-column">
+            <label>Confirmer mot de passe</label>
+            <PassWord v-model="v$.utilisateur.confirmPassword.$model"
+                      :class="{'p-invalid': v$.utilisateur.confirmPassword.$invalid && submitted}" toggleMask></PassWord>
+            <small v-for="error of getErrorsOfGivenFieldWhenSubmitted('confirmPassword', v$.$errors)" :key="error.$uid"
+                   class="p-error">{{error.$message}}</small>
+          </div>
+        </div>
+        <div class="col-4 text-align-center align-self-center">
             <div class="inline-flex align-self-center align-items-center">
-              <label class="mr-2">Photo de profil</label>
-              <PrimeButton icon="pi pi-download" class="p-button-rounded p-button-sm p-button-text"/>
-              <PrimeButton icon="pi pi-times" class="p-button-rounded p-button-danger p-button-sm p-button-text"
-                           :disabled="!this.utilisateur.profilePicture"/>
+              <label class="mr-2 mb-2">Photo de profil</label>
             </div>
             <div class="align-self-center">
               <AvatarIcon v-if="utilisateur.profilePicture"
@@ -67,7 +77,6 @@
               <AvatarIcon v-else :label="uppercaseFirstLetterName"
                           class="displayed-profil-picture" shape="circle" size="xlarge"
                           :style="'background-color:' + getColorFromUserName + ';color : #fff'"/>
-            </div>
           </div>
         </div>
       </div>
@@ -77,7 +86,7 @@
 
 <script>
 import useVuelidate from '@vuelidate/core'
-import {required, email, alpha, helpers} from '@vuelidate/validators'
+import {required, email, alpha, helpers, sameAs} from '@vuelidate/validators'
 import {apiService} from "@/main";
 export default {
   name: "UserCreate",
@@ -98,6 +107,8 @@ export default {
         prenom : null,
         profilePicture : null,
         email : null,
+        password : null,
+        confirmPassword : null,
         noisettes : null
       },
       typeOptions: [
@@ -196,6 +207,13 @@ export default {
         email : {
           required : helpers.withMessage("Ce champs ne peut pas être vide !", required),
           email : helpers.withMessage("Ce champs doit contenir une adresse email valide", email)
+        },
+        password : {
+          required : helpers.withMessage("Ce champs ne peut pas être vide !", required),
+        },
+        confirmPassword : {
+          required : helpers.withMessage("Ce champs ne peut pas être vide !", required),
+          sameAsPassword: helpers.withMessage("Ce champs doit être identique avec password",sameAs(this.utilisateur.password)),
         }
       }
     }

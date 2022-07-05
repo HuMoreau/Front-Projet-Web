@@ -5,7 +5,7 @@
       <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-secondary p-button-text" @click="goTo('/tickets')"/>
       <DropDown v-model="selectedSorting" :options="sortingList" optionLabel="name" class="ml-auto" placeholder="Trier par" :disabled="!tickets"/>
     </div>
-    <div v-if="tickets" class="p-panel-content no-padding max-min-h-35vh">
+    <div v-if="tickets && tickets.length > 0" class="p-panel-content no-padding max-min-h-35vh">
       <VisuelTicket v-for="ticket in this.tickets" :key="ticket.id" :ticket-to-display="ticket"/>
     </div>
     <div v-else class="p-panel-content no-padding border-bottom">
@@ -57,6 +57,7 @@ export default {
             this.tickets.push(ticket);
           }
         }
+        console.log("TI", this.tickets.length > 0);
       });
     }
 

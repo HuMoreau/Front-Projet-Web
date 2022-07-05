@@ -2,7 +2,6 @@
   <div class="p-component p-panel">
     <div class="p-panel-header flex align-items-center">
       <label class="p-panel-title mr-1">Stats Perso</label>
-      <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-secondary p-button-text" />
     </div>
     <div class="p-panel-content no-padding grid ml-0 mr-0 mt-0 align-items-center text-align-center">
       <label class="font-bold col-3">Tickets/Jour</label>

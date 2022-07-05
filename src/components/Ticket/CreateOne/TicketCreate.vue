@@ -209,9 +209,6 @@ export default {
     return { v$: useVuelidate() }
   },
   created() {
-    if(this.$route.query.mod){
-      //this.modification = (this.$route.query.mod === 'true');
-    }
   },
   data(){
     return {
@@ -251,7 +248,6 @@ export default {
     }
   },
   mounted() {
-
     // api
     this.populate();
   },
@@ -259,6 +255,9 @@ export default {
     populate() {
       apiService.get('projet').then(response => {
         this.projetsList = response.data;
+        if(this.$route.query.projet){
+          this.ticket.projet = this.projetsList.find(projet => projet.id == this.$route.query.projet);
+        }
       });
       apiService.get('client').then(response => {
         this.clientsList = response.data;

@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-row justify-content-center align-items-center">
-    <AvatarIcon icon="pi pi-user" class="mr-2" shape="circle" />
+    <AvatarIcon :label="uppercaseFirstLetterName"
+                class="mr-2" shape="circle"
+                :style="'background-color:' + getColorFromUserName + ';color : #fff'"/>
     <div class="flex flex-column justify-content-center align-items-center mr-2">
       <label id="nomUtilisateur" class="mb-0">{{userPrenom ? userPrenom : '-'}}
         {{userNom ? userNom : '-'}}</label>
@@ -47,7 +49,32 @@ export default {
       this.authStore.deconnexion();
       this.$router.push('/auth');
     }
-  }
+  },
+  computed: {
+    uppercaseFirstLetterName: function () {
+      return this.userPrenom.charAt(0).toUpperCase();
+    },
+    getFirstAndLastName : function () {
+      return this.userPrenom + ' ' + this.userNom;
+    },
+    getColorFromUserName : function () {
+      let hash = 0;
+      if(this.userPrenom){
+        for (let i = 0; i < this.getFirstAndLastName.length; i++) {
+          hash = this.getFirstAndLastName.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        let colour = '#';
+        for (let i = 0; i < 3; i++) {
+          const value = (hash >> (i * 8)) & 0xFF;
+          colour += ('00' + value.toString(16)).substr(-2);
+        }
+        return colour;
+      }
+      else {
+        return '#73C2FB'
+      }
+    }
+  },
 }
 </script>
 
