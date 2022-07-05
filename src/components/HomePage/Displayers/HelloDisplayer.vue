@@ -7,8 +7,26 @@
 </template>
 
 <script>
+import {quoteService} from "@/main";
+
 export default {
-  name: "HelloDisplayer"
+  name: "HelloDisplayer",
+  data(){
+    return {
+      quote : ""
+    }
+  },
+  mounted() {
+    // api
+    this.populate();
+  },
+  methods: {
+    populate(){
+      quoteService.post().then(response => {
+        this.quote = response.data.quote + " - " + response.data.author;
+      });
+    }
+  }
 }
 </script>
 

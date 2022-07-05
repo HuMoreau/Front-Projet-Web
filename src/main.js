@@ -64,6 +64,14 @@ export const apiService = axios.create({
   }
 })
 
+export const quoteService = axios.create({
+  baseURL: 'https://api.function.divlo.fr/functions/randomQuote',
+  timeout: 5000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+
 let isAuth = window.localStorage.getItem("user") ?
     JSON.parse(window.localStorage.getItem("user")).isAuth : false;
 
