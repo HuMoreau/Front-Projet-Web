@@ -1,4 +1,5 @@
 import {defineStore} from "pinia";
+import {apiService} from "@/main";
 
 export const useAuthStore = defineStore("auth", {
     state: () => ({
@@ -33,6 +34,11 @@ export const useAuthStore = defineStore("auth", {
             this.userNom = user.nom;
             this.userPrenom = user.prenom;
             this.userNoisettes = user.noisettes;
+        },
+        refreshNoisette(){
+            apiService.get('developpeur/noisettes/' + this.userId).then(res => {
+                this.userNoisettes = res.data.noisettes;
+            });
         }
     },
     persist: {

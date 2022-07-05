@@ -97,7 +97,7 @@
                      :options="projetsList" optionLabel="id" :filter="true" :disabled="!modification"
                      :class="{'p-invalid': v$.ticket.projet.$invalid && submitted}">
             <template #value="slotProps">
-              <div v-if="slotProps.value">
+              <div v-if="slotProps.value && slotProps.value.id">
                 {{slotProps.value.nom}}
               </div>
               <span v-else>
@@ -121,7 +121,7 @@
                     filterPlaceholder="Nom" :disabled="!modification"
                     :class="{'p-invalid': v$.ticket.client.$invalid && submitted}">
             <template #value="slotProps">
-              <div v-if="slotProps.value">
+              <div v-if="slotProps.value && slotProps.value.id">
                 <AvatarIcon :label="uppercaseFirstLetterName(slotProps.value.prenom)"
                             class="mr-2" shape="circle"
                             :style="'background-color:' + getColorFromUserName(slotProps.value.prenom, slotProps.value.nom) + ';color : #fff'"/>
@@ -151,7 +151,7 @@
                     filterPlaceholder="Nom" :disabled="!modification"
                     :class="{'p-invalid': v$.ticket.rapporteur.$invalid && submitted}">
             <template #value="slotProps">
-              <div v-if="slotProps.value">
+              <div v-if="slotProps.value && slotProps.value.id">
                 <AvatarIcon :label="uppercaseFirstLetterName(slotProps.value.prenom)"
                             class="mr-2" shape="circle"
                             :style="'background-color:' + getColorFromUserName(slotProps.value.prenom, slotProps.value.nom) + ';color : #fff'"/>
@@ -181,7 +181,7 @@
                     filterPlaceholder="Nom" :disabled="!modification"
                     :class="{'p-invalid': v$.ticket.developpeur.$invalid && submitted}">
             <template #value="slotProps">
-              <div v-if="slotProps.value">
+              <div v-if="slotProps.value && slotProps.value.id">
                 <AvatarIcon :label="uppercaseFirstLetterName(slotProps.value.prenom)"
                             class="mr-2" shape="circle"
                             :style="'background-color:' + getColorFromUserName(slotProps.value.prenom, slotProps.value.nom) + ';color : #fff'"/>
@@ -219,11 +219,16 @@
 import useVuelidate from '@vuelidate/core'
 import {helpers, maxLength, required, requiredIf} from '@vuelidate/validators'
 import {apiService} from "@/main";
+import {useAuthStore} from "@/store/authStore";
 
 export default {
   name: "TicketInfo",
   setup () {
-    return { v$: useVuelidate() }
+    const authStore = useAuthStore();
+    return {
+      authStore,
+      v$: useVuelidate()
+    }
   },
   created() {
     if(this.$route.query.mod){
@@ -323,6 +328,7 @@ export default {
         // sending request
         apiService.put('ticket', body).then(() => {
           this.$router.push('/tickets');
+          if (this.ticket.etatAvancement === 'FINI') this.authStore.refreshNoisette();
         });
       }
     },
@@ -344,7 +350,7 @@ export default {
       return prenom + ' ' + nom;
     },
     uppercaseFirstLetterName(prenom) {
-      return prenom.charAt(0).toUpperCase();
+      return prenom ? prenom.charAt(0).toUpperCase() : "";
     },
     getColorFromUserName(prenom, nom){
       let hash = 0;
