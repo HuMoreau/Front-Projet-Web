@@ -309,6 +309,7 @@ export default {
         if (this.ticket.etatAvancement === 'FINI') this.ticket.dateEnd = dateActuelle;
 
         let body = {
+          id: this.ticket.id,
           idProjet: this.ticket.projet.id,
           idClient: this.ticket.client.id,
           idRapporteur: this.ticket.rapporteur.id,
