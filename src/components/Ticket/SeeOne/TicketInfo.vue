@@ -217,8 +217,9 @@
 
 <script>
 import useVuelidate from '@vuelidate/core'
-import {required, helpers, requiredIf, maxLength} from '@vuelidate/validators'
+import {helpers, maxLength, required, requiredIf} from '@vuelidate/validators'
 import {apiService} from "@/main";
+
 export default {
   name: "TicketInfo",
   setup () {
@@ -302,11 +303,7 @@ export default {
       if(!invalid){
         this.v$.$reset();
 
-        const date = new Date();
-
-        const dateActuelle = date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate() + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds();
-
-        if (this.ticket.etatAvancement === 'FINI') this.ticket.dateEnd = dateActuelle;
+        if (this.ticket.etatAvancement === 'FINI') this.ticket.dateEnd = this.dateNowComputed;
 
         let body = {
           id: this.ticket.id,
@@ -315,9 +312,9 @@ export default {
           idRapporteur: this.ticket.rapporteur.id,
           idDev: this.ticket.developpeur ? this.ticket.developpeur.id : null,
           nom: this.ticket.nom,
-          dateStart: this.ticket.dateStart,
-          dateAssign: this.ticket.dateAssign,
-          dateEnd: this.ticket.dateEnd,
+          dateStart: this.dateStartComputed,
+          dateAssign: this.dateAssignComputed,
+          dateEnd: this.dateEndComputed,
           etatAvancement: this.ticket.etatAvancement,
           importance: this.ticket.importance,
           description: this.ticket.description,
@@ -364,6 +361,22 @@ export default {
     }
   },
   computed : {
+    dateStartComputed : function () {
+      let date = new Date(this.ticket.dateStart);
+      return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate() + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds();
+    },
+    dateAssignComputed : function () {
+      let date = new Date(this.ticket.dateAssign);
+      return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate() + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds();
+    },
+    dateEndComputed : function () {
+      let date = new Date(this.ticket.dateEnd);
+      return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate() + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds();
+    },
+    dateNowComputed : function () {
+      let date = new Date();
+      return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate() + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds();
+    },
     nomLength : function (){
       return this.ticket.nom ? this.ticket.nom.length : 0;
     },
