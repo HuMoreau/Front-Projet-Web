@@ -4,7 +4,7 @@
       <div class="mb-2">
         <label id="nomTicket">{{this.ticketToDisplay.nom}}</label>
         <label> - </label>
-        <small id="dateTicket">{{this.ticketToDisplay.dateStart}}</small>
+        <small id="dateTicket">{{dateStartFormated}}</small>
         <label> - </label>
         <small id="projetTicket">{{this.ticketToDisplay.projet.nom}}</small>
         <label> - </label>
@@ -32,6 +32,11 @@ export default {
       }
       this.$router.push(link);
     }
+  },
+  computed : {
+    dateStartFormated : function(){
+      return this.ticketToDisplay.dateStart ? new Date(this.ticketToDisplay.dateStart).toLocaleDateString('fr') : '-';
+    },
   }
 }
 </script>

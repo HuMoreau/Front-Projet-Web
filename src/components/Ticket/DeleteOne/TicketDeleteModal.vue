@@ -3,7 +3,7 @@
                @hide="abortSuppression">
     <p class="m-0">Vous êtes sur le point de supprimer le ticket
       <strong>{{ticketToDisplay ? ticketToDisplay.nom : '-'}}</strong> créé le
-      <strong>{{ticketToDisplay ? ticketToDisplay.dateStart : '-'}}</strong>
+      <strong>{{dateStartFormated}}</strong>
       pour le projet <strong>{{ticketToDisplay ? ticketToDisplay.projet.nom : '-'}}</strong>.</p>
     <p class="m-0">Voulez-vous continuer ?</p>
     <template #footer>
@@ -41,6 +41,11 @@ export default {
     abortSuppression(){
       this.$emit('closeMe');
     }
+  },
+  computed : {
+    dateStartFormated : function(){
+      return this.ticketToDisplay.dateStart ? new Date(this.ticketToDisplay.dateStart).toLocaleDateString('fr') : '-';
+    },
   },
   watch : {
     displayed(value){

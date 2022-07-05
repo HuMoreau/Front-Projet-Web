@@ -19,14 +19,15 @@
 
 <script>
 import VisuelTicket from "@/components/HomePage/Displayers/Visuels/VisuelDisplayerTicket";
-import {apiService} from "@/main";
 
 export default {
   name: "ProjetTicketDisplayer",
   components: {VisuelTicket},
+  props: {
+    tickets: Object
+  },
   data(){
     return {
-      tickets: null,
       selectedSorting : null,
       sortingList : [
         {name : "Priorité"},
@@ -41,20 +42,12 @@ export default {
   },
   methods: {
     goTo(link, params){
-
       if(params){
         this.$router.push({path: link, query: params});
         return;
       }
       this.$router.push(link);
     },
-    populate() {
-      apiService.get('projet/AllTickets/' + this.$route.params.id).then(response => {
-        this.tickets = response.data;
-      }).catch(error => {
-        console.log(error);
-      });
-    }
   }
 }
 </script>

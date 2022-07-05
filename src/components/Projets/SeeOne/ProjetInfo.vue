@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="grid grid-nogutter p-panel-content">
-      <div class=" col-10 col-offset-1 grid">
+      <div class=" col-12 grid">
         <div class="col-4 grid">
           <div class="col-12 flex flex-column justify-content-center">
             <div class="col-12 flex flex-column">
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12 flex justify-content-evenly align-items-center mt-3">
+      <div class="col-12">
         <ProjetTicketDisplayer :tickets="tickets" id="selected_ticket_displayer"/>
       </div>
     </div>
@@ -76,6 +76,7 @@ export default {
   data(){
     return {
       tickets: null,
+      ticketsAreLoaded : false,
       projet : {
         id: null,
         nom : "",
@@ -117,6 +118,7 @@ export default {
 
       apiService.get('projet/AllTickets/' + this.$route.params.id).then(response => {
         this.tickets = response.data;
+        console.log(this.tickets);
       }).catch(error => {
         console.log(error);
       });

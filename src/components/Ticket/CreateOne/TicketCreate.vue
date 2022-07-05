@@ -28,7 +28,7 @@
         <div class="flex flex-column">
           <label>Avancement</label>
           <DropDown placeholder="Avancement" v-model="v$.ticket.etatAvancement.$model"
-                    :options="avancementList" 
+                    :options="avancementList" disabled
                     :class="{'p-invalid': v$.ticket.etatAvancement.$invalid && submitted}">
             <template #value="slotProps">
               <div v-if="slotProps.value">
@@ -162,7 +162,7 @@
           <label>Developpeur </label>
           <DropDown placeholder="Developpeur" v-model="v$.ticket.developpeur.$model"
                     :options="developpeursList" optionLabel="id" :filter="true"
-                    filterPlaceholder="Nom" showClear
+                    filterPlaceholder="Nom" showClear disabled
                     :class="{'p-invalid': v$.ticket.developpeur.$invalid && submitted}">
             <template #value="slotProps">
               <div v-if="slotProps.value">
