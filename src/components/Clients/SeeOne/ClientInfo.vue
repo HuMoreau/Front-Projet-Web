@@ -127,9 +127,12 @@ export default {
         // if error, display error message
         apiService.put('/client', this.client).then(() => {
           this.$router.push('/clients');
-        }).catch(error => {
-          console.log(error);
-        });
+        }).catch(
+            this.$toast.add({severity:'error',
+              summary : 'Erreur',
+              detail : `Une erreur n'a pas permis la modification du client`
+            })
+        );
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){
@@ -139,7 +142,6 @@ export default {
       return [];
     },
     goTo(link, params){
-
       if(params){
         this.$router.push({path: link, query: params});
         return;

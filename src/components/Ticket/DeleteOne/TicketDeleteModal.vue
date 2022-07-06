@@ -44,7 +44,7 @@ export default {
   },
   computed : {
     dateStartFormated : function(){
-      return this.ticketToDisplay.dateStart ? new Date(this.ticketToDisplay.dateStart).toLocaleDateString('fr') : '-';
+      return this.ticketToDisplay ? this.ticketToDisplay.dateStart ? new Date(this.ticketToDisplay.dateStart).toLocaleDateString('fr') : '-' : '-';
     },
   },
   watch : {

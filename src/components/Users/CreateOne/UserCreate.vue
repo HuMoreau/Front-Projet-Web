@@ -142,10 +142,13 @@ export default {
         this.utilisateur.type = type;
 
         apiService.post(queryURL, this.utilisateur).then(() => {
-          this.$router.push('/users');
-        }).catch(error => {
-          console.log(error);
-        });
+          this.goTo('/users', {display : 'create-success'});
+        }).catch(
+            this.$toast.add({severity:'error',
+              summary : 'Erreur',
+              detail : `Une erreur n'a pas permis la création de l'utilisateur`
+            })
+        );
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){
@@ -155,7 +158,6 @@ export default {
       return [];
     },
     goTo(link, params){
-
       if(params){
         this.$router.push({path: link, query: params});
         return;

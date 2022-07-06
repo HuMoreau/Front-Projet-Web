@@ -2,6 +2,7 @@
   <div>
     <HomePageDeveloppeur v-if="isUserDev"/>
     <HomePageRapporteur v-if="isUserRap"/>
+    <PrimeToast />
   </div>
 </template>
 

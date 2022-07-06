@@ -38,6 +38,7 @@
         </div>
       </div>
     </div>
+    <PrimeToast/>
 
     <!--  Modal de suppression  -->
     <ProjetDeleteModal @closeMe="closeDeleteModal($event)" :displayed="isDeletionModalDisplayed" :projet-to-display="projetToDelete"/>
@@ -66,6 +67,12 @@ export default {
   },
   mounted() {
     this.populate();
+    if(this.$route.query.display === 'create-success'){
+      this.$toast.add({severity:'success', summary: 'Succès', detail:'Projet correctement créé', life: 3000});
+    }
+    if(this.$route.query.display === 'modification-success'){
+      this.$toast.add({severity:'success', summary: 'Succès', detail:'Projet correctement modifié', life: 3000});
+    }
   },
   methods: {
     populate() {
@@ -81,12 +88,12 @@ export default {
     closeDeleteModal(isDeleted){
       if (isDeleted) {
         this.populate();
+        this.$toast.add({severity:'success', summary: 'Succès', detail:'Projet correctement supprimé', life: 3000});
       }
       this.projetToDelete = null;
       this.isDeletionModalDisplayed = false;
     },
     goTo(link, params){
-
       if(params){
         this.$router.push({path: link, query: params});
         return;

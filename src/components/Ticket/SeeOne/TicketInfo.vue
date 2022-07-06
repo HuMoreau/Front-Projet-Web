@@ -279,29 +279,21 @@ export default {
   },
   methods: {
     populate() {
-      const promise1 = apiService.get('projet').then(response => {
+      apiService.get('projet').then(response => {
         this.projetsList = response.data;
       });
-      const promise2 = apiService.get('client').then(response => {
+      apiService.get('client').then(response => {
         this.clientsList = response.data;
       });
-      const promise3 = apiService.get('rapporteur').then(response => {
+      apiService.get('rapporteur').then(response => {
         this.rapporteursList = response.data;
       });
-      const promise4= apiService.get('developpeur').then(response => {
+      apiService.get('developpeur').then(response => {
         this.developpeursList = response.data;
       });
-      const promise5 = apiService.get('ticket/' + this.$route.params.id).then(response => {
+     apiService.get('ticket/' + this.$route.params.id).then(response => {
         this.ticket = response.data;
-      }).catch(error => {
-        console.log(error);
-      });
-
-      Promise.all([promise1, promise2, promise3, promise4, promise5])
-          .then(() => {
-            console.log(this.ticket);
-            this.ticket.projet = this.projetsList.find(projet => projet.id == this.ticket.projet.id);
-          })
+      })
     },
     submitModification(invalid){
       this.submitted = invalid;
@@ -327,9 +319,14 @@ export default {
 
         // sending request
         apiService.put('ticket', body).then(() => {
-          this.$router.push('/tickets');
+          this.goTo('/tickets', {display : "modification-success"})
           if (this.ticket.etatAvancement === 'FINI') this.authStore.refreshNoisette();
-        });
+        }).catch(
+            this.$toast.add({severity:'error',
+              summary : 'Erreur',
+              detail : `Une erreur n'a pas permis la modification du ticket`
+            })
+        );
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){

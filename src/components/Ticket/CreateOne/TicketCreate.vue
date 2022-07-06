@@ -298,8 +298,13 @@ export default {
 
         // sending request
         apiService.post('ticket', body).then(() => {
-          this.$router.push('/tickets');
-        });
+          this.goTo('/tickets', {display : "create-success"})
+        }).catch(
+            this.$toast.add({severity:'error',
+              summary : 'Erreur',
+              detail : `Une erreur n'a pas permis la création du ticket`
+            })
+        );
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){

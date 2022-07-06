@@ -21,6 +21,9 @@ import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
 import Textarea from 'primevue/textarea';
 import Password from 'primevue/password';
+import ToastService from 'primevue/toastservice';
+import Toast from 'primevue/toast';
+
 
 import 'primevue/resources/themes/lara-light-blue/theme.css'     //theme
 import './css/general-styling.css'                       //personal theme
@@ -32,6 +35,7 @@ Vue.config.productionTip = false
 Vue.use(PrimeVue);
 Vue.use(VueRouter);
 Vue.use(PiniaVuePlugin)
+Vue.use(ToastService);
 Vue.component('MenuBar', Menubar);
 Vue.component('AvatarIcon', Avatar);
 Vue.component('PrimeButton', Button);
@@ -47,6 +51,7 @@ Vue.component('PrimeAccordion', Accordion);
 Vue.component('AccordionTab', AccordionTab);
 Vue.component('TextArea', Textarea);
 Vue.component('PassWord', Password);
+Vue.component('PrimeToast', Toast);
 
 const router = new VueRouter({
   routes,

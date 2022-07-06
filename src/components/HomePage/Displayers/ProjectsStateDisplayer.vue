@@ -3,10 +3,10 @@
     <div class="p-panel-header">
       <label class="p-panel-title mr-1">Etats des projets</label>
       <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-secondary p-button-text" @click="goTo('/projets')"/>
-      <InputText placeholder="Rechercher" type="text" class="ml-auto" :disabled="!projets"/>
+      <InputText placeholder="Rechercher" type="text" class="ml-auto" v-model="recherche" :disabled="!projets"/>
     </div>
     <div v-if="projets" class="p-panel-content no-padding max-min-h-35vh">
-      <VisuelProjet v-for="projet in this.projets" :key="projet.id" :projet-to-display="projet"/>
+      <VisuelProjet v-for="projet in this.projetsToDisplay" :key="projet.id" :projet-to-display="projet"/>
     </div>
     <div v-else class="p-panel-content no-padding border-bottom">
       <div class="flex flex-column justify-content-center align-items-center p-3">
@@ -25,6 +25,7 @@ export default {
   components: {VisuelProjet},
   data(){
     return {
+      recherche : null,
       projets : null,
     }
   },
@@ -46,6 +47,16 @@ export default {
       });
     },
   },
+  computed : {
+    projetsToDisplay : function (){
+      let result = this.projets;
+      if(this.recherche){
+        result = result.filter(projet => projet.nom.toLowerCase().includes(this.recherche.toLowerCase())
+        );
+      }
+      return result;
+    }
+  }
 }
 </script>
 

@@ -145,10 +145,13 @@ export default {
         // if success, redirect to client list
         // if error, display error message
         apiService.put('/projet', this.projet).then(() => {
-          this.$router.push('/projets');
-        }).catch(error => {
-          console.log(error);
-        });
+          this.goTo('/projets', {display : 'modification-success'});
+        }).catch(
+            this.$toast.add({severity:'error',
+              summary : 'Erreur',
+              detail : `Une erreur n'a pas permis la modification du projet`
+            })
+        );
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){

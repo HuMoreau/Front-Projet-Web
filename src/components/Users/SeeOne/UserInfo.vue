@@ -167,10 +167,13 @@ export default {
           default: return;
         }
         apiService.put(queryURL, this.utilisateur).then(() => {
-          this.$router.push('/users');
-        }).catch(error => {
-          console.log(error);
-        });
+          this.goTo('/users', {display : 'modification-success'});
+        }).catch(
+            this.$toast.add({severity:'error',
+              summary : 'Erreur',
+              detail : `Une erreur n'a pas permis la modification de l'utilisateur`
+            })
+        );
       }
     },
     getErrorsOfGivenFieldWhenSubmitted(field, errors){

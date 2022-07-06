@@ -20,6 +20,7 @@
             </div>
       </div>
     </div>
+    <PrimeToast />
   </div>
 </template>
 
@@ -53,9 +54,12 @@ export default {
         // if success, redirect to client list
         // if error, display error message
         apiService.post('/projet', this.projet).then(() => {
-          this.$router.push('/projets');
-        }).catch(error => {
-          console.log(error);
+          this.goTo('/projets', {display : 'create-success'});
+        }).catch(() => {
+          this.$toast.add({severity:'error',
+            summary : 'Erreur',
+            detail : `Une erreur n'a pas permis la création du projet`
+          });
         });
       }
     },

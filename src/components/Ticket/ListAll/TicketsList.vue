@@ -130,7 +130,8 @@
       <div v-if="tickets.length > 0 && ticketsToDisplay" class="p-panel-content no-padding max-min-h-90vh">
         <VisuelTicket v-for="ticket in this.ticketsToDisplay" :key="ticket.id"
                       :display-description="isDescriptionDisplayed"
-                      :ticket-to-display="ticket" @deleteMe="deleteTicket($event)"/>
+                      :ticket-to-display="ticket" @deleteMe="deleteTicket($event)"
+                      @assignMe="displayToastAssignation($event)" @finishMe="displayToastFinished($event)"/>
       </div>
       <div v-else-if="tickets.length > 0" class="p-panel-content no-padding border-bottom">
         <div class="flex flex-column justify-content-center align-items-center p-3">
@@ -148,7 +149,7 @@
 
     <!--  Modal de suppression  -->
     <TicketDeleteModal @closeMe="closeDeleteModal($event)" :displayed="isDeletionModalDisplayed" :ticket-to-display="ticketToDelete"/>
-
+    <PrimeToast/>
   </div>
 
 </template>
@@ -205,6 +206,12 @@ export default {
   mounted() {
     // api
     this.populate();
+    if(this.$route.query.display === 'create-success'){
+      this.$toast.add({severity:'success', summary: 'Succès', detail:'Ticket correctement créé', life: 3000});
+    }
+    if(this.$route.query.display === 'modification-success'){
+      this.$toast.add({severity:'success', summary: 'Succès', detail:'Ticket correctement modifié', life: 3000});
+    }
   },
   methods: {
     populate() {
@@ -233,12 +240,12 @@ export default {
     closeDeleteModal(isDeleted){
       if (isDeleted) {
         this.populate();
+        this.$toast.add({severity:'success', summary: 'Succès', detail:'Ticket correctement supprimé', life: 3000});
       }
       this.ticketToDelete = null;
       this.isDeletionModalDisplayed = false;
     },
     goTo(link, params){
-
       if(params){
         this.$router.push({path: link, query: params});
         return;
@@ -257,6 +264,24 @@ export default {
       this.selectedFilters.developpeur = null;
       this.recherche = null;
     },
+    displayToastAssignation(event){
+      console.log("EVENT", event);
+      if(event){
+        this.$toast.add({severity:'success', summary: 'Succès', detail:'Ce ticket vous à correctement été assigné', life: 3000});
+      }
+      else{
+        this.$toast.add({severity:'error', summary: 'Erreur', detail:'Une erreur n\'a pas permise de vous assigner ce ticket', life: 3000});
+      }
+    },
+    displayToastFinished(event){
+      console.log("EVENT", event);
+      if(event){
+        this.$toast.add({severity:'success', summary: 'Succès', detail:'Ce ticket à correctement été fermé', life: 3000});
+      }
+      else{
+        this.$toast.add({severity:'error', summary: 'Erreur', detail:'Une erreur n\'a pas permise de fermer ce ticket', life: 3000});
+      }
+    }
   },
   computed: {
     ticketsToDisplay : function (){

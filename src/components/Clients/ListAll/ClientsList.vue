@@ -22,8 +22,8 @@
           @click="goTo('clients/new')"/>
         </div>
       </div>
+      <PrimeToast/>
     </div>
-
     <!--  Modal de suppression  -->
     <ClientDeleteModal @closeMe="closeDeleteModal($event)" :displayed="isDeletionModalDisplayed" :client-to-display="clientToDelete"/>
   </div>
@@ -39,6 +39,11 @@ export default {
   components: {ClientDeleteModal, VisuelClient},
   mounted() {
     this.populate();
+    if(this.$route.query.display === 'success'){
+      this.$toast.add({severity:'success', summary: 'Succès', detail:'Client correctement créé', life: 3000});
+    }
+  },
+  created() {
   },
   data() {
     return {
@@ -71,6 +76,7 @@ export default {
     closeDeleteModal(isDeleted){
       if (isDeleted) {
         this.populate();
+        this.$toast.add({severity:'success', summary: 'Succès', detail:'Client correctement supprimé', life: 3000});
       }
       this.clientToDelete = null;
       this.isDeletionModalDisplayed = false;

@@ -3,10 +3,10 @@
     <div class="p-panel-header">
       <label class="p-panel-title mr-1">Tickets libres</label>
       <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-secondary p-button-text" @click="goTo('/tickets')"/>
-      <DropDown v-model="selectedSorting" :options="sortingList" optionLabel="name" class="ml-auto" placeholder="Trier par" :disabled="!tickets"/>
+      <DropDown v-model="selectedSorting" :options="sortingList" class="ml-auto" placeholder="Trier par" :disabled="!tickets"/>
     </div>
     <div v-if="tickets && tickets.length > 0" class="p-panel-content no-padding max-min-h-35vh">
-      <VisuelTicket v-for="ticket in this.tickets" :key="ticket.id" :ticket-to-display="ticket"/>
+      <VisuelTicket v-for="ticket in this.sortedTickets" :key="ticket.id" :ticket-to-display="ticket"/>
     </div>
     <div v-else class="p-panel-content no-padding border-bottom">
       <div class="flex flex-column justify-content-center align-items-center p-3">
@@ -27,11 +27,7 @@ export default {
     return {
       tickets : null,
       selectedSorting : null,
-      sortingList : [
-        {name : "Priorité"},
-        {name : "Ancienneté"},
-        {name : "Projet"}
-      ]
+      sortingList : ["Priorité", "Ancienneté", "Projet"]
     }
   },
   mounted() {
@@ -60,7 +56,21 @@ export default {
         console.log("TI", this.tickets.length > 0);
       });
     }
-
+  },
+  computed : {
+    sortedTickets : function (){
+      let ticketsToDisplay = this.tickets;
+      if(this.selectedSorting === "Priorité"){
+        return ticketsToDisplay.sort((a, b) => a.importance.localeCompare(b.importance));
+      }
+      if(this.selectedSorting === "Ancienneté"){
+        return ticketsToDisplay.sort((a, b) => new Date(b.dateStart) - new Date(a.dateStart));
+      }
+      if(this.selectedSorting === "Projet"){
+        return ticketsToDisplay.sort((a, b) => a.projet.nom.localeCompare(b.projet.nom));
+      }
+      return ticketsToDisplay;
+    }
   }
 }
 </script>

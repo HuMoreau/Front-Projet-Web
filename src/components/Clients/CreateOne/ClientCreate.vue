@@ -62,6 +62,7 @@
         </div>
       </div>
     </div>
+    <PrimeToast />
   </div>
 </template>
 
@@ -110,9 +111,12 @@ export default {
         // if success, redirect to client list
         // if error, display error message
         apiService.post('/client', this.client).then(() => {
-          this.$router.push('/clients');
-        }).catch(error => {
-          console.log(error);
+          this.goTo('/clients', {display : 'create-success'});
+        }).catch(() => {
+          this.$toast.add({severity:'error',
+            summary : 'Erreur',
+            detail : `Une erreur n'a pas permis la création du client`
+          });
         });
       }
     },

@@ -26,6 +26,7 @@
         </div>
       </div>
     </div>
+    <PrimeToast/>
 
     <!--  Modal de suppression  -->
     <UserDeleteModal @closeMe="closeDeleteModal($event)" :displayed="isDeletionModalDisplayed" :user-to-display="userToDelete"/>
@@ -56,6 +57,12 @@ export default {
   mounted() {
     // api call to get all users
     this.populate();
+    if(this.$route.query.display === 'create-success'){
+      this.$toast.add({severity:'success', summary: 'Succès', detail:'Utilisateur correctement créé', life: 3000});
+    }
+    if(this.$route.query.display === 'modification-success'){
+      this.$toast.add({severity:'success', summary: 'Succès', detail:'Utilisateur correctement modifié', life: 3000});
+    }
   },
   methods: {
     populate() {
@@ -72,12 +79,12 @@ export default {
     closeDeleteModal(isDeleted){
       if (isDeleted) {
         this.populate();
+        this.$toast.add({severity:'success', summary: 'Succès', detail:'Utilisateur correctement supprimé', life: 3000});
       }
       this.userToDelete = null;
       this.isDeletionModalDisplayed = false;
     },
     goTo(link, params){
-
       if(params){
         this.$router.push({path: link, query: params});
         return;

@@ -21,6 +21,8 @@
         <PrimeButton label="Connexion" @click="checkForAuth()"></PrimeButton>
       </div>
     </div>
+    <img class="dancing-squirrel" src="./../../assets/squirrel-dancing-squirrel.gif"/>
+    <img class="bugs" src="./../../assets/programmer-developer.gif"/>
   </div>
 </template>
 
@@ -64,7 +66,6 @@ export default {
         return;
       }
       this.errorMessage = null;
-      console.log(user);
       this.authStore.connexion(user);
       this.$router.push("/");
     },
@@ -112,5 +113,13 @@ export default {
     border-radius: 15px;
     background-color : lightpink;
     border: 1px solid lightcoral;
+  }
+
+  .dancing-squirrel{
+    position: fixed; bottom: 0px; right: 0px
+  }
+
+  .bugs{
+    position: fixed; bottom: 20px; left: 20px
   }
 </style>

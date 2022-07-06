@@ -3,10 +3,10 @@
     <div class="p-panel-header">
       <label class="p-panel-title mr-1">Clients</label>
       <PrimeButton icon="pi pi-chevron-right" class="p-button-rounded p-button-secondary p-button-text" @click="goTo('/clients')"/>
-      <InputText placeholder="Rechercher" type="text" class="ml-auto" :disabled="!clients"/>
+      <InputText placeholder="Rechercher" type="text" class="ml-auto" v-model="recherche" :disabled="!clients"/>
     </div>
     <div v-if="clients" class="p-panel-content no-padding max-min-h-35vh">
-      <VisuelClient v-for="client in this.clients" :key="client.id" :client-to-display="client"/>
+      <VisuelClient v-for="client in this.clientsToDisplay" :key="client.id" :client-to-display="client"/>
     </div>
     <div v-else class="p-panel-content no-padding border-bottom">
       <div class="flex flex-column justify-content-center align-items-center p-3">
@@ -26,6 +26,7 @@ export default {
   components: {VisuelClient},
   data(){
     return {
+      recherche : null,
       clients : null,
     }
   },
@@ -47,6 +48,18 @@ export default {
       });
     },
   },
+  computed : {
+    clientsToDisplay : function (){
+      let result = this.clients;
+      if(this.recherche){
+        result = result.filter(client =>
+            client.prenom.toLowerCase().includes(this.recherche.toLowerCase())
+            || client.nom.toLowerCase().includes(this.recherche.toLowerCase())
+        );
+      }
+      return result;
+    }
+  }
 }
 </script>
 

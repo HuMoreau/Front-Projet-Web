@@ -50,7 +50,7 @@ export default {
       });
     },
     abortSuppression(){
-      this.$emit('closeMe');
+      this.$emit('closeMe', false);
     }
   },
   watch : {
