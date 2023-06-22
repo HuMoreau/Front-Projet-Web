@@ -1,11 +1,17 @@
+const CopyPlugin = require("copy-webpack-plugin");
+
 module.exports = {
-  chainWebpack: config => {
-    config.plugin("copy").tap(([pathConfigs]) => {
-      pathConfigs.unshift({
-        from: "cfg",
-        to: "cfg"
-      });
-      return [pathConfigs]})
+  configureWebpack: {
+    plugins: [
+      new CopyPlugin({
+        patterns: [
+          {
+            from: "cfg",
+            to: "cfg",
+          },
+        ],
+      }),
+    ]
   },
-  transpileDependencies: ["vuetify"]
+  transpileDependencies: true
 };

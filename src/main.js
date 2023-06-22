@@ -24,6 +24,7 @@ import Password from 'primevue/password';
 import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
 
+let ApiSettings = window.__env.api;
 
 import 'primevue/resources/themes/lara-light-blue/theme.css'     //theme
 import './css/general-styling.css'                       //personal theme
@@ -62,8 +63,8 @@ const pinia = createPinia()
 pinia.use(piniaPersist);
 
 export const apiService = axios.create({
-  baseURL: 'http://localhost:9090/api/',
-  timeout: 5000,
+  baseURL: ApiSettings.url,
+  timeout: ApiSettings.timeout,
   headers: {
     'Content-Type': 'application/json'
   }
